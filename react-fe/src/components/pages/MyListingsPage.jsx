@@ -13,6 +13,7 @@ import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ListingForm from '../organisms/ListingForm';
+import BookingsTable from '../organisms/BookingsTable';
 
 const useStyles = makeStyles({
   header_text: {
@@ -106,7 +107,7 @@ const MyListingsPage = (props) => {
   for (const listing of respListings) {
     listings.push(
       <Grid item key={listing.listingId}>
-        <Grid container direction="column">
+        <Grid container direction="column" alignItems='center'>
           <Grid container direction="row" alignItems='center' justify='center'>
             <Grid item>
               <ParkSpotListingCard
@@ -163,6 +164,7 @@ const MyListingsPage = (props) => {
                 locn={listing.location}
                 imgUrl={listing.imgUrl}
                 dRate={listing.dayPrice}
+                descr={listing.description}
                 instr={listing.instructions}
                 parkingSize={listing.size}
                 parkingType={listing.type} />
@@ -170,7 +172,7 @@ const MyListingsPage = (props) => {
           }
           {activeBookings === listing.listingId ?
             <Grid item>
-              <p>Active bookings placeholder</p>
+              <BookingsTable bookingId={listing.listingId} />
             </Grid> : null
           }
         </Grid>
