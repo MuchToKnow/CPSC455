@@ -42,14 +42,14 @@ Project task requirements:
     ○ User profile page
     ○ User profile editing
     ○ Customer support page
-    ○ Integration with a map API
     ○ Address and neighbourhood based search for parking spots
     ○ Support for calendar-based date selection
     ○ Reviews for parking spots
     ○ Reviews for users
 
 ○ 2-3 stretch requirements (plan to complete at least 1!)
-    
+
+    ○ Integration with a map API
     ○ Identity and ownership authentication API (Persona)
     ○ Integration with credit / debit card API
     ○ Referral program for friends/family to join as lister/renter
