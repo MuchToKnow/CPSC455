@@ -70,5 +70,5 @@ tasks!
 Finally, draw 2-3 rough sketch prototypes of some key tasks of your app. Sketch these
 physically on paper and then scan and add to your repo.
 
-○ Login and Log out page:
-![190389830_303919561412998_464236573803234768_n](https://user-images.githubusercontent.com/38776947/120020997-738ee680-c025-11eb-81ad-a04ef76d7600.jpg)
+    ○ Login and Log out page:
+   ![190389830_303919561412998_464236573803234768_n](https://user-images.githubusercontent.com/38776947/120020997-738ee680-c025-11eb-81ad-a04ef76d7600.jpg)
