@@ -74,5 +74,4 @@ physically on paper and then scan and add to your repo.
    ![190389830_303919561412998_464236573803234768_n](https://user-images.githubusercontent.com/38776947/120020997-738ee680-c025-11eb-81ad-a04ef76d7600.jpg)
 
     ○ searching for parking:
-    ![image](https://user-images.githubusercontent.com/28374404/120059316-a1643300-c005-11eb-8265-0dfbf88ee6c3.png)
-
+   ![image](https://user-images.githubusercontent.com/28374404/120059326-b214a900-c005-11eb-92df-3f1d75e55a89.png)
