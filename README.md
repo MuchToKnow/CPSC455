@@ -72,3 +72,10 @@ physically on paper and then scan and add to your repo.
 
     ○ Login and Log out page:
    ![190389830_303919561412998_464236573803234768_n](https://user-images.githubusercontent.com/38776947/120020997-738ee680-c025-11eb-81ad-a04ef76d7600.jpg)
+
+    ○ searching for parking:
+   ![image](https://user-images.githubusercontent.com/28374404/120059326-b214a900-c005-11eb-92df-3f1d75e55a89.png)
+   
+    ○ Browsing available parking:
+   ![image](https://user-images.githubusercontent.com/28374404/120059541-1e43dc80-c007-11eb-9b45-92bd4081aca6.png)
+
