@@ -1,6 +1,7 @@
 import './App.css';
 import Navbar from './components/organisms/Navbar';
 import ParkSpotListingCard from './components/molecules/ParkSpotListingCard';
+import RegisterForm from './components/molecules/RegisterForm';
 
 function App() {
   return (

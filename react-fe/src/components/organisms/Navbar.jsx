@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-
+import RegisterForm from '../molecules/RegisterForm';
 
 const Navbar = () => {
   const useStyles = makeStyles((theme) => ({
@@ -26,6 +26,7 @@ const Navbar = () => {
           Parking Space App!
         </Typography>
         <Button color="inherit">Login</Button>
+        <RegisterForm />
       </Toolbar>
     </AppBar>
   );
