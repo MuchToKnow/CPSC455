@@ -17,7 +17,7 @@ function Banner() {
             <div className='banner_info'>
                 <h1>Park cheaper and more conveniently!</h1>
                 <h5>Park now at spots that were never offered, and support your community</h5>
-                <Button variant'outlined'> Explore Parking Near You</Button>
+                <Button variant='outlined'> Explore Parking Near You</Button>
             </div>
         </div>
     )

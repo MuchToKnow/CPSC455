@@ -1,8 +1,10 @@
 import React, {useState} from 'react'
 import './Search.css'
+/*
 import "react-date-range/dist/styles.css"
 import "react-date-range/dist/theme/default.css"
 import { DateRangePicker } from "react-date-range/src";
+*/
 import {Button} from "@material-ui/core";
 
 // Date Picker Component
@@ -23,7 +25,6 @@ function Search() {
 
     return (
         <div className='search'>
-            <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} />
             <Button>Search</Button>
         </div>
     )
