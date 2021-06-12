@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { ButtonBase, Grid, Paper } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import { Constants } from '../Constants';
 
 const ParkSpotListingCard = (props) => {
   const { imgUrl, size, location, numberAvail, dayPrice } = props;
@@ -26,7 +27,7 @@ const ParkSpotListingCard = (props) => {
       <Paper>
         <Grid container direction="row" justify="space-evenly" alignItems="center">
           <Grid item>
-            <img src={imgUrl} className={classes.img} />
+            <img src={imgUrl} alt={Constants.imgAlt.userParking} className={classes.img} />
           </Grid>
           <Grid container xs={5}>
             <Grid item xs={12}>

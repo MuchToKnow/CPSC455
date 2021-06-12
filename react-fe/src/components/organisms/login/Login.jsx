@@ -1,16 +1,15 @@
 import React, { Component } from "react";
 import firebase from 'firebase';
-import StyledFirebaseUi from 'react-firebaseui/StyledFirebaseAuth'
-import 'whatwg-fetch'
-import RegisterForm from "../molecules/RegisterForm";
+import StyledFirebaseUi from 'react-firebaseui/StyledFirebaseAuth';
+import 'whatwg-fetch';
 
 firebase.initializeApp({
     apiKey: 'to_be_filled',
     authDomain: 'to_be_filled'
-})
+});
 var uiConfig = {
     callbacks: {
-        signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+        signInSuccessWithAuthResult: function (authResult, redirectUrl) {
             // TODO: add api call to save user to backend
             return true;
         },
@@ -28,15 +27,15 @@ class Login extends Component {
     constructor(props) {
         super(props);
 
-        this.state={
-            isAuthenticated : false
-        }
+        this.state = {
+            isAuthenticated: false
+        };
     }
 
     componentDidMount() {
         firebase.auth().onAuthStateChanged(user => {
-            this.setState({isAuthenticated : !this.state.isAuthenticated})
-        })
+            this.setState({ isAuthenticated: !this.state.isAuthenticated });
+        });
     }
 
     render() {
@@ -48,7 +47,7 @@ class Login extends Component {
                     firebaseAuth={firebase.auth()}
                 />
             </>
-        )
+        );
     }
 }
 export default Login;

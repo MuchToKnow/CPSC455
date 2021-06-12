@@ -1,7 +1,7 @@
-import React, {useState} from 'react'
-import './Banner.css'
-import {Button} from "@material-ui/core";
-import Search from './Search'
+import React, { useState } from 'react';
+import '../../styling/Banner.css';
+import { Button } from "@material-ui/core";
+import Search from './Search';
 
 function Banner() {
     const [showSearch, setShowSearch] = useState(false);
@@ -20,6 +20,6 @@ function Banner() {
                 <Button variant='outlined'> Explore Parking Near You</Button>
             </div>
         </div>
-    )
+    );
 }
-export default Banner
+export default Banner;
