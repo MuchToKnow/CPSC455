@@ -1,0 +1,45 @@
+.banner {
+    background: url("https://static2.mansionglobal.com/production/media/article-images/4b9af2424c2328bf3782855a87fef473/large_B3-EN112_Garage_IM_20190717123019.jpg") center center;
+    height: 50vh;
+    position: relative;
+}
+
+.banner_info {
+    background-color: black;
+    color: white;
+    padding-top: 18vh;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 40px;
+    width: 300px;
+}
+
+.banner_search {
+    display: flex;
+    flex-direction: column;
+}
+
+.banner_searchButton {
+    background-color: white !important;
+    font-weight: 900 !important;
+    text-transform: inherit !important;
+    color: #ff7779 !important;
+}
+
+.banner_info > button {
+    background-color: #ff7779;
+    color: white;
+    text-transform: inherit;
+    margin-top: 20px;
+    font-weight: 600;
+}
+
+.banner_info > button:hover {
+    background-color: white;
+    coloar: #ff7779;
+}
+
+.banner_info > h5 {
+    margin-top: 10px;
+
+}
