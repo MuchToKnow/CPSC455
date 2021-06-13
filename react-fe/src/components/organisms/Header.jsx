@@ -1,33 +1,26 @@
 import React from 'react';
 import '../../styling/Header.css';
 import SearchIcon from "@material-ui/icons/Search";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import LanguageIcon from "@material-ui/icons/Language";
-import { Avatar } from "@material-ui/core";
+import { Box } from "@material-ui/core";
+import InputBase from '@material-ui/core/InputBase';
+import AvatarButton from "../molecules/AvatarButton";
+import HouseIcon from '@material-ui/icons/House';
 
 
 function Header() {
     return (
-        <div className='header'>
-            {/*logo image goes here*/}
-            <img
-                className="header_icon"
-                src="logo_tbd"
-                alt=""
-            />
+        <Box className='header' bgcolor="primary.main">
+            <HouseIcon className="header_icon" fontSize="large" />
 
-            <div className='header_center'>
-                <input type="text" />
+            <Box className='header_center' bgcolor="primary.light">
+                <InputBase />
                 <SearchIcon />
-            </div>
+            </Box>
 
-            <div className='header_right'>
-                <p>List Your Parking Space</p>
-                <LanguageIcon />
-                <ExpandMoreIcon />
-                <Avatar />
-            </div>
-        </div>
+            <Box className='header_right'>
+                <AvatarButton />
+            </Box>
+        </Box>
     );
 }
 

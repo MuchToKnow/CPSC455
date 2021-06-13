@@ -29,7 +29,7 @@ const ParkSpotListingCard = (props) => {
           <Grid item>
             <img src={imgUrl} alt={Constants.imgAlt.userParking} className={classes.img} />
           </Grid>
-          <Grid container xs={5}>
+          <Grid item xs={5}>
             <Grid item xs={12}>
               <Typography gutterBottom variant="subtitle1">{headerStr}</Typography>
             </Grid>
