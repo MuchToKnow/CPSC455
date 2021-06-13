@@ -1,9 +1,8 @@
-import './App.css';
+import './styling/App.css';
 import Navbar from './components/organisms/Navbar';
 import ParkSpotListingCard from './components/molecules/ParkSpotListingCard';
-import RegisterForm from './components/molecules/RegisterForm';
-import Header from './components/Header'
-import Home from './components/Home'
+import Header from './components/organisms/Header';
+import Home from './components/pages/Home';
 
 
 function App() {
