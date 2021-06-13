@@ -2,20 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './styling/index.css';
 import App from './App';
-import { Switch, Route } from 'react-router';
 import reportWebVitals from './reportWebVitals';
-import Login from './components/organisms/login/Login';
 import { ThemeProvider } from '@material-ui/core';
 import { theme } from './styling/Theme.js';
 
 ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
-            <App>
-                <Switch>
-                    <Route exact path="/login" component={Login}></Route>
-                </Switch>
-            </App>
+            <App />
         </ThemeProvider>
     </React.StrictMode>,
     document.getElementById('root')
