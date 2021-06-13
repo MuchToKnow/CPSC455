@@ -1,14 +1,14 @@
 import React from 'react';
 import '../../styling/Header.css';
 import SearchIcon from "@material-ui/icons/Search";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import LanguageIcon from "@material-ui/icons/Language";
-import { Avatar } from "@material-ui/core";
+import { Box } from "@material-ui/core";
+import AvatarButton from "../molecules/AvatarButton";
 
 
 function Header() {
     return (
-        <div className='header'>
+        <Box className='header'>
             {/*logo image goes here*/}
             <img
                 className="header_icon"
@@ -24,10 +24,9 @@ function Header() {
             <div className='header_right'>
                 <p>List Your Parking Space</p>
                 <LanguageIcon />
-                <ExpandMoreIcon />
-                <Avatar />
+                <AvatarButton />
             </div>
-        </div>
+        </Box>
     );
 }
 
