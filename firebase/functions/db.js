@@ -1,5 +1,8 @@
+const functions = require('firebase-functions');
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://mongoadmin:caliorbust@35.212.216.150:27017/test';
+const user = functions.config().db.user;
+const pass = functions.config().db.pass;
+const url = `mongodb://${user}:${pass}@35.212.216.150:27017/test`;
 
 const option = {
   db: {

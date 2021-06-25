@@ -13,10 +13,10 @@
   },
   "main": "index.js",
   "dependencies": {
-    "express-mongo-db": "^1.0.0",
     "firebase": "^8.6.7",
     "firebase-admin": "^9.8.0",
     "firebase-functions": "^3.14.1",
+    "mongodb": "^3.6.9",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
