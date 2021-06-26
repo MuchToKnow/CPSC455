@@ -1,4 +1,5 @@
 import { Menu, MenuItem, Fade, Box } from "@material-ui/core";
+import CreateListingPage from "../organisms/CreateListingPage";
 import RegisterForm from '../organisms/RegisterForm';
 import LoginForm from '../organisms/LoginForm';
 import { useState } from 'react';
@@ -8,6 +9,7 @@ const AvatarMenu = (props) => {
   const { shown, setShown, anchorEl, firebase } = props;
   const [registerOpen, setRegisterOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const [createListingOpen, setCreateListingOpen] = useState(false);
 
   const handleOpenRegister = () => {
     setShown(false);
@@ -22,6 +24,11 @@ const AvatarMenu = (props) => {
   const handleLogout = () => {
     firebase.firebaseSignOut();
     setShown(false);
+  };
+
+  const handleCreateListing = () => {
+    setShown(false);
+    setCreateListingOpen(true);
   };
 
   const handleClose = () => {
@@ -42,9 +49,11 @@ const AvatarMenu = (props) => {
         <MenuItem onClick={handleOpenLogin}>Login</MenuItem>
         <MenuItem onClick={handleOpenRegister}>Register</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        <MenuItem onClick={handleCreateListing}>Create Listing</MenuItem>
       </Menu>
       <RegisterForm open={registerOpen} setOpen={setRegisterOpen} />
       <LoginForm open={loginOpen} setOpen={setLoginOpen} />
+      <CreateListingPage open={createListingOpen} setOpen={setCreateListingOpen} />
     </Box>
   );
 };
