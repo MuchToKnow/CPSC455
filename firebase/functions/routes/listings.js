@@ -53,12 +53,11 @@ router.post('/', (req, res, next) => {
     };
   }
   db.getInstance((db) => {
-    console.log(db);
-    db.db('test').collection('listings').insertOne(listingObj, (err, result) => {
+    db.collection('listings').insertOne(listingObj, (err, result) => {
       if (err) {
         return res.status(400).json({ error: err });
       }
-      return res.status(201);
+      return res.status(201).json('Success');
     });
   });
 });
