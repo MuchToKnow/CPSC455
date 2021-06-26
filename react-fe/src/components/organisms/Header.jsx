@@ -10,7 +10,7 @@ import HouseIcon from '@material-ui/icons/House';
 function Header() {
     return (
         <Box className='header' bgcolor="primary.main">
-            <HouseIcon className="header_icon" fontSize="large" />
+            <HouseIcon className="header_icon" fontSize="large"/>
 
             <Box className='header_center' bgcolor="primary.light">
                 <InputBase />
