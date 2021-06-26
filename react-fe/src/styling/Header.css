@@ -12,8 +12,13 @@
 
 .header_icon{
     object-fit: contain;
-    height: 100px;
-    margin-left: 20px;
+    height: 100%;
+    margin-left: 2%;
+}
+
+.landing_icon{
+    width: 100%;
+    padding-bottom: 10%;
 }
 
 .header_center {

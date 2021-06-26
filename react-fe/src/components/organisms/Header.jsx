@@ -4,14 +4,12 @@ import SearchIcon from "@material-ui/icons/Search";
 import { Box } from "@material-ui/core";
 import InputBase from '@material-ui/core/InputBase';
 import AvatarButton from "../molecules/AvatarButton";
-import HouseIcon from '@material-ui/icons/House';
-
+import logo from "../../logo_transparent.png";
 
 function Header() {
     return (
         <Box className='header' bgcolor="primary.main">
-            <HouseIcon className="header_icon" fontSize="large" />
-
+            <img className="header_icon" src={logo} alt="Logo"/>
             <Box className='header_center' bgcolor="primary.light">
                 <InputBase />
                 <SearchIcon />
