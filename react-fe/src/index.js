@@ -5,11 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from '@material-ui/core';
 import { theme } from './styling/Theme.js';
+import Firebase, { FirebaseContext } from './components/Firebase';
 
 ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
-            <App />
+            <FirebaseContext.Provider value={new Firebase()}>
+                <App />
+            </FirebaseContext.Provider>
         </ThemeProvider>
     </React.StrictMode>,
     document.getElementById('root')

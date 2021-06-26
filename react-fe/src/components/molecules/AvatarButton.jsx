@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Button, Box } from "@material-ui/core";
 import AvatarMenu from './AvatarMenu';
 import React, { useState } from 'react';
+import { FirebaseContext } from '../Firebase';
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -30,7 +31,9 @@ const AvatarButton = () => {
         <MenuIcon className={classes.icon} />
         <Avatar />
       </Button>
-      <AvatarMenu anchorEl={anchorEl} shown={shown} setShown={setShown} />
+      <FirebaseContext.Consumer>
+        {firebase => <AvatarMenu firebase={firebase} anchorEl={anchorEl} shown={shown} setShown={setShown} />}
+      </FirebaseContext.Consumer>
     </Box>
   );
 };
