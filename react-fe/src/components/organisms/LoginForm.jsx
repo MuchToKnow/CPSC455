@@ -3,7 +3,7 @@ import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } 
 import { useState } from 'react';
 import { withFirebase } from '../Firebase';
 
-const RegisterForm = (props) => {
+const LoginForm = (props) => {
     const useStyles = makeStyles((theme) => ({
         root: {
             display: 'flex',
@@ -33,11 +33,8 @@ const RegisterForm = (props) => {
     const classes = useStyles();
 
     const { open, setOpen } = props;
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
 
     const handleClose = () => {
         setOpen(false);
@@ -45,7 +42,7 @@ const RegisterForm = (props) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        props.firebase.firebaseRegisterUserEmailPass(email, password);
+        props.firebase.firebaseSignInEmailAndPassword(email, password);
         // TODO: Confirmation dialog
         handleClose();
     };
@@ -53,31 +50,9 @@ const RegisterForm = (props) => {
     return (
         <div>
             <Dialog classes={{ paper: classes.dialogPaper }} open={open} onClose={handleClose}>
-                <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>Create New Account</DialogTitle>
+                <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>Login</DialogTitle>
                 <form onSubmit={handleSubmit}>
                     <DialogContent>
-                        <TextField
-                            required
-                            margin="dense"
-                            id="firstName"
-                            label="First Name"
-                            name="firstName"
-                            variant="outlined"
-                            value={firstName}
-                            fullWidth
-                            onChange={e => setFirstName(e.target.value)}
-                        />
-                        <TextField
-                            required
-                            margin="dense"
-                            id="lastName"
-                            label="Last Name"
-                            name="lastName"
-                            variant="outlined"
-                            value={lastName}
-                            fullWidth
-                            onChange={e => setLastName(e.target.value)}
-                        />
                         <TextField
                             required
                             margin="dense"
@@ -101,21 +76,10 @@ const RegisterForm = (props) => {
                             value={password}
                             onChange={e => setPassword(e.target.value)}
                         />
-                        <TextField
-                            required
-                            margin="dense"
-                            fullWidth
-                            id="phoneNumber"
-                            label="Phone Number"
-                            name="phoneNumber"
-                            variant="outlined"
-                            value={phoneNumber}
-                            onChange={e => setPhoneNumber(e.target.value)}
-                        />
                     </DialogContent>
                     <DialogActions>
                         <Button type="submit" className={classes.registerButton} fullWidth={true} variant="contained" disableElevation color="primary">
-                            Register
+                            Login
                         </Button>
                     </DialogActions>
                 </form>
@@ -123,4 +87,4 @@ const RegisterForm = (props) => {
         </div>
     );
 };
-export default withFirebase(RegisterForm);
+export default withFirebase(LoginForm);
