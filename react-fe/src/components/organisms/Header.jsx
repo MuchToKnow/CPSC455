@@ -6,10 +6,10 @@ import InputBase from '@material-ui/core/InputBase';
 import AvatarButton from "../molecules/AvatarButton";
 import logo from "../../logo_transparent.png";
 
-
 function Header() {
     return (
         <Box className='header' bgcolor="primary.main">
+
             <img className="img_logo_icon" src={logo} alt="Logo"/>
             <Box className='header_center' bgcolor="primary.light">
                 <InputBase />
