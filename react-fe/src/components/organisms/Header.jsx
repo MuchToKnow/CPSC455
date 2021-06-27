@@ -9,8 +9,7 @@ import logo from "../../logo_transparent.png";
 function Header() {
     return (
         <Box className='header' bgcolor="primary.main">
-
-            <img className="img_logo_icon" src={logo} alt="Logo"/>
+            <a className="img_logo_icon" href="/app"><img className="img_logo_icon" src={logo} alt="Logo"/></a>
             <Box className='header_center' bgcolor="primary.light">
                 <InputBase />
                 <SearchIcon />
