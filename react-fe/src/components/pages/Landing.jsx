@@ -2,6 +2,7 @@ import React from 'react';
 import '../../styling/Banner.css';
 import { Button, Box, Typography } from "@material-ui/core";
 import Typed from 'typed.js';
+import logo from "../../logo_long_transparent.png";
 
 function Landing() {
     const typed = React.useRef(null);
@@ -31,6 +32,7 @@ function Landing() {
         <Box className='banner' >
             <Box className='banner_container' bgcolor="tertiary.main">
                 <Box className='banner_info'>
+                    <img className="landing_icon" src={logo} alt="Logo"/>
                     <Typography variant="h3" className="banner_text">Park <span ref={el} /></Typography>
                     <Typography variant="h5" className="banner_text">Park now at spots that were never offered, and support your community</Typography>
                     <Button variant='contained' href="/app" color="primary"> Explore Parking Near You</Button>
