@@ -31,9 +31,7 @@ const AvatarButton = () => {
         <MenuIcon className={classes.icon} />
         <Avatar />
       </Button>
-      <FirebaseContext.Consumer>
-        {firebase => <AvatarMenu firebase={firebase} anchorEl={anchorEl} shown={shown} setShown={setShown} />}
-      </FirebaseContext.Consumer>
+      <AvatarMenu anchorEl={anchorEl} shown={shown} setShown={setShown} />
     </Box>
   );
 };
