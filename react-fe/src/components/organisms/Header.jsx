@@ -5,13 +5,17 @@ import { Box } from "@material-ui/core";
 import InputBase from '@material-ui/core/InputBase';
 import AvatarButton from "../molecules/AvatarButton";
 import logo from "../../logo_transparent.png";
+import debounce from 'debounce';
 
-function Header() {
+function Header(props) {
+    const onChange = debounce((event) => {
+        props.onSearchChange(event.target.value);
+    }, 150);
     return (
         <Box className='header' bgcolor="primary.main">
-            <a className="img_logo_icon" href="/app"><img className="img_logo_icon" src={logo} alt="Logo"/></a>
+            <a className="img_logo_icon" href="/app"><img className="img_logo_icon" src={logo} alt="Logo" /></a>
             <Box className='header_center' bgcolor="primary.light">
-                <InputBase />
+                <InputBase onChange={onChange} />
                 <SearchIcon />
             </Box>
 
@@ -20,6 +24,6 @@ function Header() {
             </Box>
         </Box>
     );
-}
+};
 
 export default Header;

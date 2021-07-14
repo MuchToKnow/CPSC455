@@ -1,23 +1,48 @@
 import Header from '../organisms/Header';
 import ParkSpotListingCard from '../molecules/ParkSpotListingCard';
 import { withFirebase } from '../Firebase';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import config from '../../config';
 import axios from 'axios';
 
 const MainApp = () => {
+  const url = config.api.url;
+  const [listings, setListings] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const responseToListings = (resp) => {
+    const newListings = [];
+    for (const listing of resp) {
+      newListings.push(
+        <ParkSpotListingCard
+          key={listing.listingId}
+          imgUrl={listing.imgUrl}
+          size={listing.size}
+          location={listing.location}
+          numberAvail={listing.numberAvail}
+          dayPrice={listing.dayPrice}
+        />
+      );
+    }
+    setListings(newListings);
+  };
+
   useEffect(() => {
-    axios.get();
+    axios.get(url + "/listings/").then((resp) => responseToListings(resp.data));
   }, []);
+
+  useEffect(() => {
+    if (searchTerm) {
+      axios.get(url + "/listings/search?searchTerm=" + searchTerm).then((resp) => responseToListings(resp.data));
+    } else {
+      axios.get(url + "/listings/").then((resp) => responseToListings(resp.data));
+    }
+  }, [searchTerm]);
 
   return (
     <div className="App">
-      <Header />
-      <ParkSpotListingCard
-        imgUrl="https://static2.mansionglobal.com/production/media/article-images/4b9af2424c2328bf3782855a87fef473/large_B3-EN112_Garage_IM_20190717123019.jpg"
-        size="Example card component for Large"
-        location="Mount Pleasant"
-        numberAvail={2}
-        dayPrice={20} />
+      <Header onSearchChange={setSearchTerm} />
+      {listings}
     </div>
   );
 };
