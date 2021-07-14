@@ -1,7 +1,14 @@
 import Header from '../organisms/Header';
 import ParkSpotListingCard from '../molecules/ParkSpotListingCard';
+import { withFirebase } from '../Firebase';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 const MainApp = () => {
+  useEffect(() => {
+    axios.get();
+  }, []);
+
   return (
     <div className="App">
       <Header />
@@ -10,10 +17,9 @@ const MainApp = () => {
         size="Example card component for Large"
         location="Mount Pleasant"
         numberAvail={2}
-        dayPrice={20}
-        hourPrice={3} />
+        dayPrice={20} />
     </div>
   );
 };
 
-export default MainApp;
+export default withFirebase(MainApp);
