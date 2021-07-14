@@ -4,6 +4,7 @@ import { withFirebase } from '../Firebase';
 import { useEffect, useState } from 'react';
 import config from '../../config';
 import axios from 'axios';
+import { Grid } from '@material-ui/core';
 
 const MainApp = () => {
   const url = config.api.url;
@@ -42,7 +43,12 @@ const MainApp = () => {
   return (
     <div className="App">
       <Header onSearchChange={setSearchTerm} />
-      {listings}
+      <Grid
+        container
+        direction="column"
+      >
+        {listings}
+      </Grid>
     </div>
   );
 };

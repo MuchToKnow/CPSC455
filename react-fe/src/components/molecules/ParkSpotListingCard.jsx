@@ -6,7 +6,7 @@ import { Constants } from '../Constants';
 
 const ParkSpotListingCard = (props) => {
   const { imgUrl, size, location, numberAvail, dayPrice } = props;
-  const headerStr = size + " parking spot in " + location;
+  const headerStr = size + " parking spot at " + location;
   const availabilityStr = String(numberAvail) + " spots available";
   const dayPriceStr = "$" + String(dayPrice) + "/day";
 
@@ -24,28 +24,29 @@ const ParkSpotListingCard = (props) => {
   const classes = useStyles();
   return (
     <Link to={{
-        pathname: '/listing-page-example',
-        state: imgUrl}}>
-        <ButtonBase href='/listing-page-example'>
-          <Paper>
-            <Grid container direction="row" justify="space-evenly" alignItems="center">
-              <Grid item>
-                <img src={imgUrl} alt={Constants.imgAlt.userParking} className={classes.img} />
+      pathname: '/listing-page-example',
+      state: imgUrl
+    }}>
+      <ButtonBase href='/listing-page-example'>
+        <Paper>
+          <Grid container direction="row" justify="space-evenly" alignItems="center">
+            <Grid item>
+              <img src={imgUrl} alt={Constants.imgAlt.userParking} className={classes.img} />
+            </Grid>
+            <Grid item xs={5}>
+              <Grid item xs={12}>
+                <Typography gutterBottom variant="subtitle1">{headerStr}</Typography>
               </Grid>
-              <Grid item xs={5}>
-                <Grid item xs={12}>
-                  <Typography gutterBottom variant="subtitle1">{headerStr}</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography>{availabilityStr}</Typography>
-                </Grid>
-              </Grid>
-              <Grid item xs={1}>
-                <Typography variant="subtitle1">{dayPriceStr}</Typography>
+              <Grid item xs={12}>
+                <Typography>{availabilityStr}</Typography>
               </Grid>
             </Grid>
-          </Paper>
-        </ButtonBase>
+            <Grid item xs={1}>
+              <Typography variant="subtitle1">{dayPriceStr}</Typography>
+            </Grid>
+          </Grid>
+        </Paper>
+      </ButtonBase>
     </Link>
   );
 };
