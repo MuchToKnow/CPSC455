@@ -36,20 +36,6 @@ class Firebase {
   firebasePasswordUpdate = (password) => this.auth.currentUser.updatePassword(password);
 
   getUser = () => { return this.auth.currentUser; };
-
-  getToken = () => {
-    return this.auth.currentUser.getIdToken();
-  };
-
-  getRequestWithToken = (url) => {
-    return this.auth.currentUser.getIdToken().then((token) => {
-      return axios.get(url, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-    });
-  };
 };
 
 export default Firebase;
