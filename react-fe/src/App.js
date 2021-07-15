@@ -3,16 +3,20 @@ import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import Landing from './components/pages/Landing';
 import MainApp from './components/pages/MainApp';
 import ListingPageExample from './components/pages/ListingPageExample';
+import MyListingsPage from './components/pages/MyListingsPage';
 
 function App() {
   return (
     <Router>
       <Switch>
+        <Route exact path="/">
+          <Landing />
+        </Route>
         <Route exact path="/app">
           <MainApp />
         </Route>
-        <Route exact path="/">
-          <Landing />
+        <Route exact path="/myListings">
+          <MyListingsPage />
         </Route>
 
         //change this route later

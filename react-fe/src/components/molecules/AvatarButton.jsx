@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Button, Box } from "@material-ui/core";
 import AvatarMenu from './AvatarMenu';
 import React, { useState } from 'react';
-import { FirebaseContext } from '../Firebase';
 
 const useStyles = makeStyles((theme) => ({
   btn: {
