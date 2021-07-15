@@ -25,9 +25,8 @@ const MainApp = () => {
     const newListings = [];
     for (const listing of resp) {
       newListings.push(
-        <Grid item>
+        <Grid item key={listing.listingId}>
           <ParkSpotListingCard
-            key={listing.listingId}
             imgUrl={listing.imgUrl}
             size={listing.size}
             location={listing.location}

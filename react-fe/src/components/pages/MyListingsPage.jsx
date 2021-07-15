@@ -21,9 +21,10 @@ const useStyles = makeStyles({
 const MyListingsPage = (props) => {
   const classes = useStyles();
   const url = config.api.url;
-  const [listings, setListings] = useState([]);
+  const [respListings, setRespListings] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [authUserHeaders, setAuthUserHeaders] = useState(null);
+  const [activeEdit, setActiveEdit] = useState("");
 
   // Returns a function to delete a listing by listingId, requires authorization headers
   const deleteListing = (listingId, reqHeaders) => {
@@ -32,63 +33,15 @@ const MyListingsPage = (props) => {
         axios.delete(url + "/listings/" + listingId, reqHeaders).then(() => {
           alert("Successfully Deleted");
           if (searchTerm) {
-            axios.get(url + "/listings/mine/search?searchTerm=" + searchTerm, authUserHeaders).then((resp) => responseToListings(resp.data));
+            axios.get(url + "/listings/mine/search?searchTerm=" + searchTerm, authUserHeaders).then((resp) => setRespListings(resp.data));
           } else {
-            axios.get(url + "/listings/mine", reqHeaders).then((resp) => responseToListings(resp.data, reqHeaders));
+            axios.get(url + "/listings/mine", reqHeaders).then((resp) => setRespListings(resp.data, reqHeaders));
           }
         }).catch(error => {
           alert("Server error - Failed to delete");
         });
       }
     };
-  };
-
-  const showEditPanel = (listingId) => {
-    return () => {
-
-    };
-  };
-
-  const responseToListings = (resp, reqHeaders) => {
-    const newListings = [];
-    for (const listing of resp) {
-      newListings.push(
-        <Grid item>
-          <Grid container direction="column">
-            <Grid container direction="row" alignItems='center' justify='center'>
-              <Grid item>
-                <ParkSpotListingCard
-                  key={listing.listingId}
-                  imgUrl={listing.imgUrl}
-                  size={listing.size}
-                  location={listing.location}
-                  numberAvail={listing.numberAvail}
-                  dayPrice={listing.dayPrice}
-                />
-              </Grid>
-              <Grid item>
-                <Button onClick={showEditPanel(listing.listingId)}>
-                  <EditIcon />
-                </Button>
-              </Grid>
-              <Grid item>
-                <ConfirmDialog
-                  onConfirm={deleteListing(listing.listingId, reqHeaders)}
-                  dialogText="Are you sure you want to delete this listing?"
-                  actionNegative="Cancel"
-                  actionPositive="Delete"
-                  buttonIcon={(<DeleteIcon />)}
-                />
-              </Grid>
-            </Grid>
-            <Grid item>
-              {/* Edit window goes here */}
-            </Grid>
-          </Grid>
-        </Grid >
-      );
-    }
-    setListings(newListings);
   };
 
   useEffect(() => {
@@ -102,7 +55,7 @@ const MyListingsPage = (props) => {
             }
           };
           setAuthUserHeaders(reqHeaders);
-          axios.get(url + "/listings/mine", reqHeaders).then((resp) => responseToListings(resp.data, reqHeaders));
+          axios.get(url + "/listings/mine", reqHeaders).then((resp) => setRespListings(resp.data));
         });
       } else {
         setAuthUserHeaders(null);
@@ -111,13 +64,52 @@ const MyListingsPage = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log(authUserHeaders);
     if (searchTerm && authUserHeaders) {
-      axios.get(url + "/listings/mine/search?searchTerm=" + searchTerm, authUserHeaders).then((resp) => responseToListings(resp.data));
+      axios.get(url + "/listings/mine/search?searchTerm=" + searchTerm, authUserHeaders).then((resp) => setRespListings(resp.data));
     } else if (!searchTerm && authUserHeaders) {
-      axios.get(url + "/listings/mine", authUserHeaders).then((resp) => responseToListings(resp.data));
+      axios.get(url + "/listings/mine", authUserHeaders).then((resp) => setRespListings(resp.data));
     }
   }, [searchTerm]);
+
+  const listings = [];
+  for (const listing of respListings) {
+    listings.push(
+      <Grid item key={listing.listingId}>
+        <Grid container direction="column">
+          <Grid container direction="row" alignItems='center' justify='center'>
+            <Grid item>
+              <ParkSpotListingCard
+                imgUrl={listing.imgUrl}
+                size={listing.size}
+                location={listing.location}
+                numberAvail={listing.numberAvail}
+                dayPrice={listing.dayPrice}
+              />
+            </Grid>
+            <Grid item>
+              <Button onClick={() => setActiveEdit(listing.listingId)}>
+                <EditIcon />
+              </Button>
+            </Grid>
+            <Grid item>
+              <ConfirmDialog
+                onConfirm={deleteListing(listing.listingId, authUserHeaders)}
+                dialogText="Are you sure you want to delete this listing?"
+                actionNegative="Cancel"
+                actionPositive="Delete"
+                buttonIcon={(<DeleteIcon />)}
+              />
+            </Grid>
+          </Grid>
+          {activeEdit === listing.listingId ?
+            <Grid item>
+              <p>EDIT AREA PLACEHOLDER</p>
+            </Grid> : null
+          }
+        </Grid>
+      </Grid >
+    );
+  }
 
   return (
     <div className="App">

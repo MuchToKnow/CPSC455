@@ -24,6 +24,7 @@ const AvatarMenu = (props) => {
   const handleLogout = () => {
     firebase.firebaseSignOut();
     setShown(false);
+    window.location.href = "/";
   };
 
   const handleCreateListing = () => {
