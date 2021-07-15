@@ -1,6 +1,6 @@
 const dev = {
   api: {
-    url: "localhost:8000"
+    url: "http://localhost:5000/cpsc455/us-central1/api"
   }
 };
 

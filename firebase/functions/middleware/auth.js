@@ -20,7 +20,7 @@ const authMiddleware = (req, res, next) => {
   if (token && token.split(' ')[0] === 'Bearer') {
     admin.auth().verifyIdToken(token.split(' ')[1])
       .then((decodedToken) => {
-        req[user] = {
+        req['user'] = {
           uid: decodedToken.uid,
           email: decodedToken.email,
         };

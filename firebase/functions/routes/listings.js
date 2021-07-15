@@ -3,9 +3,34 @@ const FuzzySearch = require('fuzzy-search');
 const router = express.Router();
 const { v4: uuid } = require('uuid');
 const db = require('../db');
+const authMiddleware = require('../middleware/auth');
+
+/* GET search for listings associated with user. */
+router.get('/mine/search', authMiddleware, (req, res, next) => {
+  const searchTerm = req.query['searchTerm'];
+  if (!searchTerm) {
+    res.status(400).json({ error: "No search string specified" });
+    return next();
+  }
+  db.getInstance(async (db) => {
+    try {
+      const filteredListings = await db.collection('listings').find({ creatorUserId: req.user.uid }).toArray();
+      const searcher = new FuzzySearch(filteredListings, ['size', 'location'], {
+        caseSensitive: false,
+        sort: true,
+      });
+      const result = searcher.search(searchTerm);
+      res.status(200).json(result);
+      return next();
+    } catch (err) {
+      res.status(400).json({ error: err });
+      return next();
+    }
+  });
+});
 
 /* GET all listings associated with user. */
-router.get('/mine', (req, res, next) => {
+router.get('/mine', authMiddleware, (req, res, next) => {
   db.getInstance(async (db) => {
     try {
       const result = await db.collection('listings').find({ creatorUserId: req.user.uid }).toArray();
@@ -71,30 +96,18 @@ router.get('/', (req, res, next) => {
 });
 
 /* POST create single listing. */
-router.post('/', (req, res, next) => {
+router.post('/', authMiddleware, (req, res, next) => {
   const { imgUrl, size, location, numberAvail, dayPrice } = req.body;
-  let listingObj;
-  if (req.user) {
-    listingObj = {
-      creatorUserId: req.user.uid,
-      email: req.user.email,
-      listingId: uuid(),
-      imgUrl,
-      size,
-      location,
-      numberAvail,
-      dayPrice,
-    };
-  } else {
-    listingObj = {
-      listingId: uuid(),
-      imgUrl,
-      size,
-      location,
-      numberAvail,
-      dayPrice,
-    };
-  }
+  const listingObj = {
+    creatorUserId: req.user.uid,
+    email: req.user.email,
+    listingId: uuid(),
+    imgUrl,
+    size,
+    location,
+    numberAvail,
+    dayPrice,
+  };
   db.getInstance(async (db) => {
     try {
       const result = await db.collection('listings').insertOne(listingObj);
@@ -108,7 +121,7 @@ router.post('/', (req, res, next) => {
 });
 
 /* DELETE delete single listing */
-router.delete('/:listingId', (req, res, next) => {
+router.delete('/:listingId', authMiddleware, (req, res, next) => {
   if (!req.user || !req.user.uid) {
     res.status(401).json({ error: "Unauthorized, no user id available" });
     return next();
@@ -137,7 +150,7 @@ router.delete('/:listingId', (req, res, next) => {
 });
 
 /* PUT update single listing */
-router.put('/:listingId', (req, res, next) => {
+router.put('/:listingId', authMiddleware, (req, res, next) => {
   if (!req.user || !req.user.uid) {
     res.status(401).json({ error: "Unauthorized, no user id available" });
     return next();

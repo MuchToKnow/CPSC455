@@ -1,4 +1,4 @@
-import { Menu, MenuItem, Fade, Box } from "@material-ui/core";
+import { Menu, MenuItem, Fade, Box, Link } from "@material-ui/core";
 import CreateListingPage from "../organisms/CreateListingPage";
 import RegisterForm from '../organisms/RegisterForm';
 import LoginForm from '../organisms/LoginForm';
@@ -24,11 +24,16 @@ const AvatarMenu = (props) => {
   const handleLogout = () => {
     firebase.firebaseSignOut();
     setShown(false);
+    window.location.href = "/";
   };
 
   const handleCreateListing = () => {
     setShown(false);
     setCreateListingOpen(true);
+  };
+
+  const redirectToMyListings = () => {
+    window.location.href = "/myListings";
   };
 
   const handleClose = () => {
@@ -50,11 +55,12 @@ const AvatarMenu = (props) => {
         <MenuItem onClick={handleOpenRegister}>Register</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
         <MenuItem onClick={handleCreateListing}>Create Listing</MenuItem>
+        <MenuItem onClick={redirectToMyListings}>My Listings</MenuItem>
       </Menu>
       <RegisterForm open={registerOpen} setOpen={setRegisterOpen} />
       <LoginForm open={loginOpen} setOpen={setLoginOpen} />
       <CreateListingPage open={createListingOpen} setOpen={setCreateListingOpen} />
-    </Box>
+    </Box >
   );
 };
 
