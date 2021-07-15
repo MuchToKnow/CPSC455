@@ -9,6 +9,7 @@ import { Grid, Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import DriveEtaIcon from '@material-ui/icons/DriveEta';
 
 const useStyles = makeStyles({
   header_text: {
@@ -42,30 +43,49 @@ const MyListingsPage = (props) => {
     };
   };
 
+  const showEditPanel = (listingId) => {
+    return () => {
+
+    };
+  };
+
   const responseToListings = (resp, reqHeaders) => {
     const newListings = [];
     for (const listing of resp) {
       newListings.push(
         <Grid item>
-          <ParkSpotListingCard
-            key={listing.listingId}
-            imgUrl={listing.imgUrl}
-            size={listing.size}
-            location={listing.location}
-            numberAvail={listing.numberAvail}
-            dayPrice={listing.dayPrice}
-          />
-          <Button>
-            <EditIcon />
-          </Button>
-          <ConfirmDialog
-            onConfirm={deleteListing(listing.listingId, reqHeaders)}
-            dialogText="Are you sure you want to delete this listing?"
-            actionNegative="Cancel"
-            actionPositive="Delete"
-            buttonIcon={(<DeleteIcon />)}
-          />
-        </Grid>
+          <Grid container direction="column">
+            <Grid container direction="row" alignItems='center' justify='center'>
+              <Grid item>
+                <ParkSpotListingCard
+                  key={listing.listingId}
+                  imgUrl={listing.imgUrl}
+                  size={listing.size}
+                  location={listing.location}
+                  numberAvail={listing.numberAvail}
+                  dayPrice={listing.dayPrice}
+                />
+              </Grid>
+              <Grid item>
+                <Button onClick={showEditPanel(listing.listingId)}>
+                  <EditIcon />
+                </Button>
+              </Grid>
+              <Grid item>
+                <ConfirmDialog
+                  onConfirm={deleteListing(listing.listingId, reqHeaders)}
+                  dialogText="Are you sure you want to delete this listing?"
+                  actionNegative="Cancel"
+                  actionPositive="Delete"
+                  buttonIcon={(<DeleteIcon />)}
+                />
+              </Grid>
+            </Grid>
+            <Grid item>
+              {/* Edit window goes here */}
+            </Grid>
+          </Grid>
+        </Grid >
       );
     }
     setListings(newListings);
@@ -102,7 +122,7 @@ const MyListingsPage = (props) => {
   return (
     <div className="App">
       <Header onSearchChange={setSearchTerm} />
-      <Typography variant="h4" className={classes.header_text}>My Listings</Typography>
+      <Typography variant="h4" className={classes.header_text}><DriveEtaIcon color="secondary" fontSize="large" /> My Listings <DriveEtaIcon color="secondary" fontSize="large" /></Typography>
       <Grid
         container
         direction="column"

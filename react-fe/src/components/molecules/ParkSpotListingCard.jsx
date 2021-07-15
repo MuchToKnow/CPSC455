@@ -19,6 +19,9 @@ const ParkSpotListingCard = (props) => {
       marginTop: '20px',
       marginBottom: '20px'
     },
+    grid: {
+      width: '700px'
+    }
   }));
 
   const classes = useStyles();
@@ -29,7 +32,7 @@ const ParkSpotListingCard = (props) => {
     }}>
       <ButtonBase href='/listing-page-example'>
         <Paper>
-          <Grid container direction="row" justify="space-evenly" alignItems="center">
+          <Grid container direction="row" justify="space-evenly" alignItems="center" className={classes.grid}>
             <Grid item>
               <img src={imgUrl} alt={Constants.imgAlt.userParking} className={classes.img} />
             </Grid>

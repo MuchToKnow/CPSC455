@@ -6,6 +6,7 @@ import config from '../../config';
 import axios from 'axios';
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import DriveEtaIcon from '@material-ui/icons/DriveEta';
 
 const useStyles = makeStyles({
   header_text: {
@@ -55,7 +56,7 @@ const MainApp = () => {
   return (
     <div className="App">
       <Header onSearchChange={setSearchTerm} />
-      <Typography variant="h4" className={classes.header_text}>Available Parking Spaces</Typography>
+      <Typography variant="h4" className={classes.header_text}><DriveEtaIcon color="secondary" fontSize="large" /> Available Parking Spaces <DriveEtaIcon color="secondary" fontSize="large" /></Typography>
       <Grid
         container
         direction="column"
