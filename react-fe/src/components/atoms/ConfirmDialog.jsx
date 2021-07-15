@@ -5,10 +5,15 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { ButtonGroup } from '@material-ui/core';
 
+
+// Adapted from: https://material-ui.com/components/dialogs/#alerts
 export default function AlertDialog(props) {
   const { onConfirm, dialogText, actionNegative, actionPositive, buttonIcon } = props;
   const [open, setOpen] = React.useState(false);
+  const [inProgress, setInProgress] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -19,6 +24,7 @@ export default function AlertDialog(props) {
   };
 
   const handleConfirm = () => {
+    setInProgress(true);
     onConfirm();
     handleClose();
   };
@@ -39,12 +45,16 @@ export default function AlertDialog(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="tertiary">
-            {actionNegative}
-          </Button>
-          <Button onClick={handleConfirm} variant="contained" color="secondary" autoFocus>
-            {actionPositive}
-          </Button>
+          {inProgress ? <CircularProgress color="secondary" /> :
+            <ButtonGroup>
+              <Button onClick={handleClose} color="tertiary">
+                {actionNegative}
+              </Button>
+              <Button onClick={handleConfirm} variant="contained" color="secondary" autoFocus disableElevation>
+                {actionPositive}
+              </Button>
+            </ButtonGroup>
+          }
         </DialogActions>
       </Dialog>
     </span>

@@ -8,6 +8,7 @@ import axios from 'axios';
 import { Grid, Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 const useStyles = makeStyles({
   header_text: {
@@ -54,6 +55,9 @@ const MyListingsPage = (props) => {
             numberAvail={listing.numberAvail}
             dayPrice={listing.dayPrice}
           />
+          <Button>
+            <EditIcon />
+          </Button>
           <ConfirmDialog
             onConfirm={deleteListing(listing.listingId, reqHeaders)}
             dialogText="Are you sure you want to delete this listing?"
