@@ -27,6 +27,7 @@ const MainApp = () => {
       newListings.push(
         <Grid item key={listing.listingId}>
           <ParkSpotListingCard
+            _id={listing.listingId}
             imgUrl={listing.imgUrl}
             size={listing.size}
             location={listing.location}
