@@ -42,9 +42,11 @@ const LoginForm = (props) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        props.firebase.firebaseSignInEmailAndPassword(email, password);
-        // TODO: Confirmation dialog
-        handleClose();
+        props.firebase.firebaseSignInEmailAndPassword(email, password).then(() => {
+            window.location.href = '/app';
+        }).catch(() => {
+            // TODO: Error message to user
+        });
     };
 
     return (
