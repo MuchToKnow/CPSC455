@@ -45,9 +45,12 @@ const RegisterForm = (props) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        props.firebase.firebaseRegisterUserEmailPass(email, password);
-        // TODO: Confirmation dialog
-        handleClose();
+        props.firebase.firebaseRegisterUserEmailPass(email, password).then(() => {
+            window.location.href = '/app';
+            handleClose();
+        }).catch(() => {
+            // TODO: Error message for user
+        });
     };
 
     return (
