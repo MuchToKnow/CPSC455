@@ -2,10 +2,10 @@ import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-u
 export const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#ffeedb',
+      main: "#97a6ec",
     },
     secondary: {
-      main: '#ffbd9b'
+      main: "rgb(171,183,239)"
     },
     tertiary: {
       main: '#0a1d37'
