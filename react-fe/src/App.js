@@ -2,7 +2,7 @@ import './styling/App.css';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import Landing from './components/pages/Landing';
 import MainApp from './components/pages/MainApp';
-import ListingPageExample from './components/pages/ListingPageExample';
+import ListingPage from './components/pages/ListingPage';
 import MyListingsPage from './components/pages/MyListingsPage';
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
           <MyListingsPage />
         </Route>
         <Route path="/listing-page-example/:listingId">
-          <ListingPageExample />
+          <ListingPage />
         </Route>
 
       </Switch>

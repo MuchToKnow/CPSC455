@@ -17,7 +17,7 @@ import config from "../../config";
 import {Constants} from "../Constants";
 import PropTypes from "prop-types";
 
-function ListingPageExample(props) {
+function ListingPage(props) {
     const useStyles = makeStyles((theme) => ({
         submitButton: {
             marginBottom: theme.spacing(2),
@@ -159,7 +159,7 @@ function ListingPageExample(props) {
     );
 }
 
-ListingPageExample.propTypes = {
+ListingPage.propTypes = {
     imgUrl: PropTypes.string,
     size: PropTypes.string,
     location: PropTypes.string,
@@ -168,4 +168,4 @@ ListingPageExample.propTypes = {
     hourPrice: PropTypes.number,
 };
 
-export default ListingPageExample;
+export default ListingPage;
