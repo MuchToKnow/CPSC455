@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     TextField,
     Box,
-    Grid, FormControl, InputLabel, Select, MenuItem
+    Grid, FormControl, InputLabel, Select, MenuItem, Button
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { withFirebase } from '../Firebase';
@@ -197,6 +197,9 @@ const CreateListingPage = (props) => {
                             <MenuItem value={'Outdoor'}>Outdoor</MenuItem>
                         </Select>
                     </FormControl>
+                    <Button variant="contained" color="secondary" className={classes.submitButton} fullWidth>
+                        Create Parking Listing!
+                    </Button>
                 </Box>
             </div>
         </div>
