@@ -15,7 +15,7 @@ function Header(props) {
         <Box className='header' bgcolor="primary.main">
             <a className="img_logo_icon" href="/app"><img className="img_logo_icon" src={logo} alt="Logo" /></a>
             <Box className='header_center' bgcolor="primary.light">
-                <InputBase onChange={onChange} />
+                <InputBase className='input_text' onChange={onChange} />
                 <SearchIcon />
             </Box>
 
