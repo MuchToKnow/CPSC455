@@ -18,9 +18,7 @@ function App() {
         <Route exact path="/myListings">
           <MyListingsPage />
         </Route>
-
-        //change this route later
-        <Route exact path="/listing-page-example">
+        <Route path="/listing-page-example/:listingId">
           <ListingPageExample />
         </Route>
 
