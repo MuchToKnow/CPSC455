@@ -1,0 +1,19 @@
+name: Deploy FE, BE to Heroku, Firebase
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-fe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: AkhileshNS/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_email: justindc99edu@gmail.com
+          heroku_app_name: project-455-cob
+          appdir: react-fe
+          buildpack: heroku/nodejs
