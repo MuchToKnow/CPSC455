@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 const ListingForm = (props) => {
-  const { onSubmit, startDate, endDate, imgUrl, carAmt, locn, dRate, instr, parkingType, listingId } = props;
+  const { onSubmit, startDate, endDate, imgUrl, carAmt, locn, dRate, instr, parkingType, parkingSize, listingId } = props;
 
   const useStyles = makeStyles((theme) => ({
     submitButton: {
@@ -24,6 +24,9 @@ const ListingForm = (props) => {
     },
     descriptionText: {
       marginBottom: theme.spacing(2),
+    },
+    textField: {
+      marginBottom: theme.spacing(2),
     }
   }));
 
@@ -37,7 +40,7 @@ const ListingForm = (props) => {
   const [dailyRate, setDailyRate] = useState(dRate ? dRate : '');
   const [instructions, setInstructions] = useState(instr ? instr : '');
   const [typeOfParking, setTypeOfParking] = useState(parkingType ? parkingType : '');
-  const [sizeOfParking, setSizeOfParking] = useState(parkingType ? parkingType : '');
+  const [sizeOfParking, setSizeOfParking] = useState(parkingSize ? parkingSize : '');
 
 
   const handleStartDateChange = (date) => {
@@ -70,9 +73,9 @@ const ListingForm = (props) => {
 
   const submit = () => {
     if (listingId) {
-      onSubmit(listingId, selectedStartDate, selectedEndDate, imageUrl, carAmount, location, dailyRate, instructions, typeOfParking);
+      onSubmit(listingId, selectedStartDate, selectedEndDate, imageUrl, carAmount, location, dailyRate, instructions, typeOfParking, sizeOfParking);
     } else {
-      onSubmit(selectedStartDate, selectedEndDate, imageUrl, carAmount, location, dailyRate, instructions, typeOfParking);
+      onSubmit(selectedStartDate, selectedEndDate, imageUrl, carAmount, location, dailyRate, instructions, typeOfParking, sizeOfParking);
     }
   };
 
@@ -126,6 +129,7 @@ const ListingForm = (props) => {
           </Select>
         </FormControl>
         <TextField
+          className={classes.textField}
           required
           id="imgUrl"
           label="Image Url"
@@ -136,6 +140,7 @@ const ListingForm = (props) => {
           onChange={handleImgChange}
         />
         <TextField
+          className={classes.textField}
           required
           id="location"
           label="Location"
@@ -146,6 +151,7 @@ const ListingForm = (props) => {
           onChange={handleLocationChange}
         />
         <TextField
+          className={classes.textField}
           required
           id="dailyRate"
           label="Daily Rate"
@@ -156,6 +162,7 @@ const ListingForm = (props) => {
           onChange={e => setDailyRate(e.target.value)}
         />
         <TextField
+          className={classes.textField}
           required
           id="instructions"
           label="Instructions For Use"

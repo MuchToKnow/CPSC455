@@ -51,10 +51,15 @@ const MyListingsPage = (props) => {
     };
   };
 
-  const updateListing = (listingId, selectedStartDate, selectedEndDate, imgUrl, numberAvail, location, dayPrice, instructions, parkingType) => {
+  const updateListing = (listingId, selectedStartDate, selectedEndDate, imgUrl, numberAvail, location, dayPrice, instructions, type, size) => {
     axios.put(url + "/listings/" + listingId, {
-      imgUrl
-
+      imgUrl,
+      numberAvail,
+      size,
+      location,
+      dayPrice,
+      instructions,
+      type,
     }, authUserHeaders).then(() => {
       alert("Successfully Edited Listing");
       fetchListings();
@@ -140,10 +145,15 @@ const MyListingsPage = (props) => {
           {activeEdit === listing.listingId ?
             <Grid item>
               <ListingForm
-                isEdit
+                listingId={listing.listingId}
+                onSubmit={updateListing}
                 carAmt={listing.numberAvail}
                 locn={listing.location}
-                dRate={listing.dayPrice} />
+                imgUrl={listing.imgUrl}
+                dRate={listing.dayPrice}
+                instr={listing.instructions}
+                parkingSize={listing.size}
+                parkingType={listing.type} />
             </Grid> : null
           }
         </Grid>
