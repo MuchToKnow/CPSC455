@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles({
   header_text: {
@@ -20,11 +21,11 @@ const MainApp = () => {
   const url = config.api.url;
   const [listings, setListings] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const responseToListings = (resp) => {
     const newListings = [];
     for (const listing of resp) {
-      console.log(listing.imgUrl);
       newListings.push(
         <Grid item key={listing.listingId}>
           <ParkSpotListingCard
@@ -39,18 +40,25 @@ const MainApp = () => {
       );
     }
     setListings(newListings);
+    setLoading(false);
   };
 
   useEffect(() => {
-    axios.get(url + "/listings/").then((resp) => responseToListings(resp.data));
+    axios.get(url + "/listings/").then((resp) => {
+      responseToListings(resp.data);
+    });
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     if (searchTerm) {
-
-      axios.get(url + "/listings/search?searchTerm=" + searchTerm).then((resp) => responseToListings(resp.data));
+      axios.get(url + "/listings/search?searchTerm=" + searchTerm).then((resp) => {
+        responseToListings(resp.data);
+      });
     } else {
-      axios.get(url + "/listings/").then((resp) => responseToListings(resp.data));
+      axios.get(url + "/listings/").then((resp) => {
+        responseToListings(resp.data);
+      });
     }
   }, [searchTerm]);
 
@@ -63,6 +71,11 @@ const MainApp = () => {
         direction="column"
         spacing={2}
       >
+        {loading ?
+          <Grid item>
+            <CircularProgress />
+          </Grid>
+          : null}
         {listings}
       </Grid>
     </div>

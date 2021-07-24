@@ -10,6 +10,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import ListingForm from '../organisms/ListingForm';
 
 const useStyles = makeStyles({
   header_text: {
@@ -25,6 +27,15 @@ const MyListingsPage = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [authUserHeaders, setAuthUserHeaders] = useState(null);
   const [activeEdit, setActiveEdit] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const fetchListings = () => {
+    if (searchTerm) {
+      axios.get(url + "/listings/mine/search?searchTerm=" + searchTerm, authUserHeaders).then((resp) => setRespListings(resp.data));
+    } else {
+      axios.get(url + "/listings/mine", authUserHeaders).then((resp) => setRespListings(resp.data, authUserHeaders));
+    }
+  };
 
   // Returns a function to delete a listing by listingId, requires authorization headers
   const deleteListing = (listingId, reqHeaders) => {
@@ -32,16 +43,31 @@ const MyListingsPage = (props) => {
       if (reqHeaders) {
         axios.delete(url + "/listings/" + listingId, reqHeaders).then(() => {
           alert("Successfully Deleted");
-          if (searchTerm) {
-            axios.get(url + "/listings/mine/search?searchTerm=" + searchTerm, authUserHeaders).then((resp) => setRespListings(resp.data));
-          } else {
-            axios.get(url + "/listings/mine", reqHeaders).then((resp) => setRespListings(resp.data, reqHeaders));
-          }
+          fetchListings();
         }).catch(error => {
           alert("Server error - Failed to delete");
         });
       }
     };
+  };
+
+  const updateListing = (listingId, startDate, endDate, imgUrl, numberAvail, location, dayPrice, instructions, type, size) => {
+    axios.put(url + "/listings/" + listingId, {
+      startDate: startDate.toDateString(),
+      endDate: endDate.toDateString(),
+      imgUrl,
+      numberAvail,
+      size,
+      location,
+      dayPrice,
+      instructions,
+      type,
+    }, authUserHeaders).then(() => {
+      alert("Successfully Edited Listing");
+      fetchListings();
+    }).catch(error => {
+      alert("Server error - Failed to edit");
+    });
   };
 
   useEffect(() => {
@@ -55,7 +81,10 @@ const MyListingsPage = (props) => {
             }
           };
           setAuthUserHeaders(reqHeaders);
-          axios.get(url + "/listings/mine", reqHeaders).then((resp) => setRespListings(resp.data));
+          axios.get(url + "/listings/mine", reqHeaders).then((resp) => {
+            setRespListings(resp.data);
+            setLoading(false);
+          });
         });
       } else {
         setAuthUserHeaders(null);
@@ -64,10 +93,17 @@ const MyListingsPage = (props) => {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     if (searchTerm && authUserHeaders) {
-      axios.get(url + "/listings/mine/search?searchTerm=" + searchTerm, authUserHeaders).then((resp) => setRespListings(resp.data));
+      axios.get(url + "/listings/mine/search?searchTerm=" + searchTerm, authUserHeaders).then((resp) => {
+        setRespListings(resp.data);
+        setLoading(false);
+      });
     } else if (!searchTerm && authUserHeaders) {
-      axios.get(url + "/listings/mine", authUserHeaders).then((resp) => setRespListings(resp.data));
+      axios.get(url + "/listings/mine", authUserHeaders).then((resp) => {
+        setRespListings(resp.data);
+        setLoading(false);
+      });
     }
   }, [searchTerm]);
 
@@ -87,7 +123,14 @@ const MyListingsPage = (props) => {
               />
             </Grid>
             <Grid item>
-              <Button onClick={() => setActiveEdit(listing.listingId)}>
+              <Button onClick={() => {
+                if (activeEdit === listing.listingId) {
+                  setActiveEdit("");
+                } else {
+                  setActiveEdit(listing.listingId);
+                }
+              }
+              }>
                 <EditIcon />
               </Button>
             </Grid>
@@ -103,7 +146,18 @@ const MyListingsPage = (props) => {
           </Grid>
           {activeEdit === listing.listingId ?
             <Grid item>
-              <p>EDIT AREA PLACEHOLDER</p>
+              <ListingForm
+                listingId={listing.listingId}
+                onSubmit={updateListing}
+                startDate={listing.startDate}
+                endDate={listing.endDate}
+                carAmt={listing.numberAvail}
+                locn={listing.location}
+                imgUrl={listing.imgUrl}
+                dRate={listing.dayPrice}
+                instr={listing.instructions}
+                parkingSize={listing.size}
+                parkingType={listing.type} />
             </Grid> : null
           }
         </Grid>
@@ -120,6 +174,11 @@ const MyListingsPage = (props) => {
         direction="column"
         spacing={2}
       >
+        {loading ?
+          <Grid item>
+            <CircularProgress />
+          </Grid>
+          : null}
         {listings}
       </Grid>
     </div>
