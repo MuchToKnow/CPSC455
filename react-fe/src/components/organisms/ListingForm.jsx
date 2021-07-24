@@ -32,8 +32,8 @@ const ListingForm = (props) => {
 
   const classes = useStyles();
 
-  const [selectedStartDate, setSelectedStartDate] = useState(startDate ? startDate : new Date('2014-08-18T21:11:54'));
-  const [selectedEndDate, setSelectedEndDate] = useState(endDate ? endDate : new Date('2014-08-18T21:11:54'));
+  const [selectedStartDate, setSelectedStartDate] = useState(startDate ? new Date(startDate) : new Date());
+  const [selectedEndDate, setSelectedEndDate] = useState(endDate ? new Date(endDate) : new Date());
   const [imageUrl, setImageUrl] = useState(imgUrl ? imgUrl : '');
   const [carAmount, setCarAmount] = useState(carAmt ? carAmt : '');
   const [location, setLocation] = useState(locn ? locn : '');

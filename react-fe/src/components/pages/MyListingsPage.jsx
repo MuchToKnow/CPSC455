@@ -51,8 +51,10 @@ const MyListingsPage = (props) => {
     };
   };
 
-  const updateListing = (listingId, selectedStartDate, selectedEndDate, imgUrl, numberAvail, location, dayPrice, instructions, type, size) => {
+  const updateListing = (listingId, startDate, endDate, imgUrl, numberAvail, location, dayPrice, instructions, type, size) => {
     axios.put(url + "/listings/" + listingId, {
+      startDate: startDate.toDateString(),
+      endDate: endDate.toDateString(),
       imgUrl,
       numberAvail,
       size,
@@ -147,6 +149,8 @@ const MyListingsPage = (props) => {
               <ListingForm
                 listingId={listing.listingId}
                 onSubmit={updateListing}
+                startDate={listing.startDate}
+                endDate={listing.endDate}
                 carAmt={listing.numberAvail}
                 locn={listing.location}
                 imgUrl={listing.imgUrl}
