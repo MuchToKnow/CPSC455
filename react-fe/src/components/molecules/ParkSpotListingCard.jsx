@@ -3,10 +3,6 @@ import { ButtonBase, Grid, Paper, Link } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { Constants } from '../Constants';
-import {forwardRef, useImperativeHandle} from "react";
-import axios from "axios";
-import config from "../../config";
-import {LocalParking} from "@material-ui/icons";
 
 const ParkSpotListingCard = (props) => {
   const { listingId, imgUrl, size, location, numberAvail, dayPrice } = props;
@@ -31,9 +27,9 @@ const ParkSpotListingCard = (props) => {
   const classes = useStyles();
   return (
     <Link to={{
-      pathname: '/listing-page-example/'+listingId
+      pathname: '/listing-page-example/' + listingId
     }}>
-      <ButtonBase id='link' href={/listing-page-example/ + listingId}>
+      <ButtonBase id='link' href={"/listing-page-example/" + listingId}>
         <Paper>
           <Grid container direction="row" justify="space-evenly" alignItems="center" className={classes.grid}>
             <Grid item>

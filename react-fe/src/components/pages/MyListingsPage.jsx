@@ -90,7 +90,7 @@ const MyListingsPage = (props) => {
         setAuthUserHeaders(null);
       }
     });
-  }, []);
+  }, [props.firebase.auth, url]);
 
   useEffect(() => {
     setLoading(true);
@@ -105,7 +105,7 @@ const MyListingsPage = (props) => {
         setLoading(false);
       });
     }
-  }, [searchTerm]);
+  }, [searchTerm, url, authUserHeaders]);
 
   const listings = [];
   for (const listing of respListings) {
@@ -120,6 +120,7 @@ const MyListingsPage = (props) => {
                 location={listing.location}
                 numberAvail={listing.numberAvail}
                 dayPrice={listing.dayPrice}
+                listingId={listing.listingId}
               />
             </Grid>
             <Grid item>

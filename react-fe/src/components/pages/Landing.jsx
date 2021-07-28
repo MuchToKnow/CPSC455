@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import '../../styling/Banner.css';
 import { Button, Box, Typography, MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 import Typed from 'typed.js';
@@ -56,19 +56,19 @@ function Landing() {
     return (
         <div className="backgroundColor">
             <Box className='banner_container' bgcolor="tertiary">
-            <Box className='banner_info'>
-                <img className="landing_icon" src={logo} alt="Logo"/>
-                <Typography variant="h3" className="banner_text">Park <span ref={el} /></Typography>
-                <Typography variant="h5" className="banner_text">Park now at spots that were never offered, and support your community</Typography>
-                <MuiThemeProvider theme={theme}>
-                    <a className="button_padding"><Button variant='contained' href="/app" color="primary"> Explore Parking Near You</Button></a>
-                    <a className="button_padding"><Button variant='contained' onClick={handleOpenLogin} color="primary"> Login </Button></a>
-                    <a className="button_padding"><Button variant='contained' onClick={handleOpenRegister} color="primary"> Register Now! </Button></a>
-                </MuiThemeProvider>
+                <Box className='banner_info'>
+                    <img className="landing_icon" src={logo} alt="Logo" />
+                    <Typography variant="h3" className="banner_text">Park <span ref={el} /></Typography>
+                    <Typography variant="h5" className="banner_text">Park now at spots that were never offered, and support your community</Typography>
+                    <MuiThemeProvider theme={theme}>
+                        <span className="button_padding"><Button variant='contained' href="/app" color="primary"> Explore Parking Near You</Button></span>
+                        <span className="button_padding"><Button variant='contained' onClick={handleOpenLogin} color="primary"> Login </Button></span>
+                        <span className="button_padding"><Button variant='contained' onClick={handleOpenRegister} color="primary"> Register Now! </Button></span>
+                    </MuiThemeProvider>
+                </Box>
+                <RegisterForm open={registerOpen} setOpen={setRegisterOpen} />
+                <LoginForm open={loginOpen} setOpen={setLoginOpen} />
             </Box>
-            <RegisterForm open={registerOpen} setOpen={setRegisterOpen} />
-            <LoginForm open={loginOpen} setOpen={setLoginOpen} />
-        </Box>
         </div>
     );
 };
