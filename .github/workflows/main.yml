@@ -40,4 +40,5 @@ jobs:
     - name: install firebase
       run: npm i firebase-tools -g
     - name: deploy
+      working-directory: ${{env.working-directory}}
       run: pwd && ls && firebase deploy --token ${{ secrets.FIREBASE_CI_KEY }}
