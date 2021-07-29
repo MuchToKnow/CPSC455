@@ -22,7 +22,7 @@ jobs:
   build-be:
     runs-on: ubuntu-latest
     env:
-      working-directory: ./firebase
+      working-directory: ./firebase/functions
 
     strategy:
       matrix:
