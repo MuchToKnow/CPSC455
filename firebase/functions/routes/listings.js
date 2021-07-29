@@ -97,20 +97,15 @@ router.get('/', (req, res, next) => {
 
 /* POST create single listing. */
 router.post('/', authMiddleware, (req, res, next) => {
-  const { imgUrl, size, location, numberAvail, dayPrice } = req.body;
   const listingObj = {
     creatorUserId: req.user.uid,
     email: req.user.email,
     listingId: uuid(),
-    imgUrl,
-    size,
-    location,
-    numberAvail,
-    dayPrice,
+    ...req.body
   };
   db.getInstance(async (db) => {
     try {
-      const result = await db.collection('listings').insertOne(listingObj);
+      await db.collection('listings').insertOne(listingObj);
       res.status(201).json("Success");
       return next();
     } catch (err) {
