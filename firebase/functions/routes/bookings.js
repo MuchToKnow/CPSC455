@@ -61,11 +61,12 @@ router.post('/', authMiddleware, (req, res, next) => {
   db.getInstance(async (db) => {
     try {
       const currentBookings = await db.collection('bookings').find({ listingId: listingId }).toArray();
-      for (const booking in currentBookings) {
+      const newStart = new Date(startDate);
+      const newEnd = new Date(endDate);
+      for (const bookingIdx in currentBookings) {
+        const booking = currentBookings[bookingIdx];
         const existingStart = new Date(booking.startDate);
         const existingEnd = new Date(booking.endDate);
-        const newStart = new Date(startDate);
-        const newEnd = new Date(endDate);
         if (existingStart <= newEnd && newStart <= existingEnd) {
           res.status(400).json({ error: "Booking date overlaps with an existing booking" });
           return next();

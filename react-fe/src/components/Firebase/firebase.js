@@ -16,6 +16,17 @@ class Firebase {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
       this.auth = firebase.auth();
+      this.auth.onAuthStateChanged(authUser => {
+        if (authUser) {
+          authUser.getIdToken().then((token) => {
+            this.authUserHeaders = {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            };
+          });
+        }
+      });
     }
   }
 
@@ -35,6 +46,10 @@ class Firebase {
   firebasePasswordUpdate = (password) => this.auth.currentUser.updatePassword(password);
 
   getUser = () => { return this.auth.currentUser; };
+
+  getAuthHeaders = () => {
+    return this.authUserHeaders;
+  };
 };
 
 export default Firebase;
