@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 const ListingForm = (props) => {
-  const { onSubmit, startDate, endDate, imgUrl, carAmt, locn, dRate, instr, parkingType, parkingSize, listingId } = props;
+  const { onSubmit, startDate, endDate, imgUrl, carAmt, locn, dRate, instr, descr, parkingType, parkingSize, listingId } = props;
 
   const useStyles = makeStyles((theme) => ({
     submitButton: {
@@ -38,6 +38,7 @@ const ListingForm = (props) => {
   const [carAmount, setCarAmount] = useState(carAmt ? carAmt : '');
   const [location, setLocation] = useState(locn ? locn : '');
   const [dailyRate, setDailyRate] = useState(dRate ? dRate : '');
+  const [description, setDescription] = useState(descr ? descr : '');
   const [instructions, setInstructions] = useState(instr ? instr : '');
   const [typeOfParking, setTypeOfParking] = useState(parkingType ? parkingType : '');
   const [sizeOfParking, setSizeOfParking] = useState(parkingSize ? parkingSize : '');
@@ -73,9 +74,9 @@ const ListingForm = (props) => {
 
   const submit = () => {
     if (listingId) {
-      onSubmit(listingId, selectedStartDate, selectedEndDate, imageUrl, carAmount, location, dailyRate, instructions, typeOfParking, sizeOfParking);
+      onSubmit(listingId, selectedStartDate, selectedEndDate, imageUrl, carAmount, location, dailyRate, description, instructions, typeOfParking, sizeOfParking);
     } else {
-      onSubmit(selectedStartDate, selectedEndDate, imageUrl, carAmount, location, dailyRate, instructions, typeOfParking, sizeOfParking);
+      onSubmit(selectedStartDate, selectedEndDate, imageUrl, carAmount, location, dailyRate, description, instructions, typeOfParking, sizeOfParking);
     }
   };
 
@@ -160,6 +161,17 @@ const ListingForm = (props) => {
           value={dailyRate}
           fullWidth
           onChange={e => setDailyRate(e.target.value)}
+        />
+        <TextField
+          className={classes.textField}
+          required
+          id="description"
+          label="Description"
+          name="description"
+          variant="outlined"
+          value={description}
+          fullWidth
+          onChange={e => setDescription(e.target.value)}
         />
         <TextField
           className={classes.textField}

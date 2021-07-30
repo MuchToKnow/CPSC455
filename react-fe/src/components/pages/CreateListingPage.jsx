@@ -2,32 +2,24 @@ import { withFirebase } from '../Firebase';
 import Header from "../organisms/Header";
 import ListingForm from '../organisms/ListingForm';
 import axios from "axios";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import config from "../../config";
 
 const CreateListingPage = (props) => {
-    const url = config.api.url
+    const url = config.api.url;
     const [authUserHeaders, setAuthUserHeaders] = useState(null);
 
-    useEffect(() => {
-        // Sets authed user when firebase loads current user
-        props.firebase.auth.onAuthStateChanged(authUser => {
-            if (authUser) {
-                authUser.getIdToken().then((token) => {
-                    const reqHeaders = {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    };
-                    setAuthUserHeaders(reqHeaders);
-                });
-            } else {
-                setAuthUserHeaders(null);
-            }
-        });
-    }, [props.firebase.auth, url]);
+    const setAuthHeaders = () => {
+        if (props.firebase.getAuthHeaders()) {
+            setAuthUserHeaders(props.firebase.getAuthHeaders());
+        } else {
+            setTimeout(setAuthHeaders, 100);
+        }
+    };
 
-    const createListing = (startDate, endDate, imgUrl, numberAvail, location, dayPrice, instructions, type, size) => {
+    useEffect(setAuthHeaders, []);
+
+    const createListing = (startDate, endDate, imgUrl, numberAvail, location, dayPrice, description, instructions, type, size) => {
         axios.post(url + "/listings/", {
             startDate: startDate.toDateString(),
             endDate: endDate.toDateString(),
@@ -36,12 +28,13 @@ const CreateListingPage = (props) => {
             size,
             location,
             dayPrice,
+            description,
             instructions,
             type,
         }, authUserHeaders).then(() => {
             alert("Successfully Created Listing");
-        }).catch(error => {
-            alert("Server error - Failed to create");
+        }).catch(err => {
+            alert("Server error - Failed to create: " + err);
         });
     };
 

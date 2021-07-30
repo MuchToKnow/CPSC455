@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../../styling/ListingPage.css';
 import Header from '../organisms/Header';
@@ -8,12 +8,12 @@ import { Button, Box, Typography, Grid, FormControl, InputLabel, Select, MenuIte
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import axios from "axios";
 import config from "../../config";
 import { Constants } from "../Constants";
+import { withFirebase } from '../Firebase';
 import PropTypes from "prop-types";
 
 function ListingPage(props) {
@@ -34,14 +34,18 @@ function ListingPage(props) {
   }));
 
   const classes = useStyles();
-  const [selectedStartDate, setSelectedStartDate] = React.useState(new Date('2014-08-18T21:11:54'));
-  const [selectedEndDate, setSelectedEndDate] = React.useState(new Date('2014-08-18T21:11:54'));
-  const [carAmount, setCarAmount] = React.useState('');
-  const [imgUrl, setImgUrl] = React.useState('');
-  const [size, setSize] = React.useState('');
-  const [location, setLocation] = React.useState(null);
-  const [numberAvail, setNumberAvail] = React.useState(null);
-  const [dayPrice, setDayPrice] = React.useState(null);
+  const [minDate, setMinDate] = useState(new Date());
+  const [maxDate, setMaxDate] = useState(new Date());
+  const [selectedStartDate, setSelectedStartDate] = useState(new Date());
+  const [selectedEndDate, setSelectedEndDate] = useState(new Date());
+  const [carAmount, setCarAmount] = useState('');
+  const [imgUrl, setImgUrl] = useState('');
+  const [size, setSize] = useState('');
+  const [location, setLocation] = useState(null);
+  const [numberAvail, setNumberAvail] = useState(null);
+  const [dayPrice, setDayPrice] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [authUserHeaders, setAuthUserHeaders] = useState(null);
   const url = config.api.url;
   const { listingId } = useParams();
 
@@ -61,12 +65,44 @@ function ListingPage(props) {
     setLocation(resp.location);
     setNumberAvail(resp.numberAvail);
     setDayPrice(resp.dayPrice);
+    setDescription(resp.description);
+    setMinDate(new Date(resp.startDate));
+    setMaxDate(new Date(resp.endDate));
   };
 
   useEffect(() => {
     axios.get(url + "/listings/single/" + listingId).then((resp) => responseToListing(resp.data)).catch(e => console.log(e));
   }, [url, listingId]);
 
+  const setAuthHeaders = () => {
+    if (props.firebase.getAuthHeaders()) {
+      setAuthUserHeaders(props.firebase.getAuthHeaders());
+    } else {
+      setTimeout(setAuthHeaders, 100);
+    }
+  };
+
+  useEffect(setAuthHeaders, []);
+
+  const onReserve = () => {
+    axios.post(url + "/bookings", {
+      startDate: selectedStartDate,
+      endDate: selectedEndDate,
+      listingId,
+      carAmount
+    }, authUserHeaders).then((resp) => {
+      alert("Booking created successfully");
+    }).catch((err) => {
+      alert("Server error - failed to create booking: " + err);
+    });
+  };
+
+  const menuList = [];
+  for (let i = 1; i <= numberAvail; i++) {
+    menuList.push(
+      <MenuItem value={i}>{String(i)}</MenuItem>
+    );
+  }
 
   return (
     <div>
@@ -76,11 +112,10 @@ function ListingPage(props) {
         <img src={imgUrl} alt={Constants.imgAlt.userParking} />
         <div className="belowImgContainer">
           <div className="descriptions">
-            <Typography variant="h6" className={classes.availabilityText}>{numberAvail} spots available - {size}</Typography>
+            <Typography variant="h6" className={classes.availabilityText}>{numberAvail} spot(s) available - {size}</Typography>
             <Typography variant="h6" className={classes.availabilityText}>${dayPrice}/day</Typography>
-            <Typography variant="h6" className={classes.descriptionText}>Located near Mount Pleasant, easy to access and close to many restaurants and public transportation.</Typography>
+            <Typography variant="h6" className={classes.descriptionText}>{description}</Typography>
             <FeatureList />
-            <Typography variant="h6">Map: </Typography>
           </div>
           <Box boxShadow={3} className="booking">
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -94,6 +129,8 @@ function ListingPage(props) {
                   label="Start Date"
                   value={selectedStartDate}
                   onChange={handleStartDateChange}
+                  minDate={minDate}
+                  maxDate={maxDate}
                   KeyboardButtonProps={{
                     'aria-label': 'change start date',
                   }}
@@ -107,28 +144,10 @@ function ListingPage(props) {
                   label="End Date"
                   value={selectedEndDate}
                   onChange={handleEndDateChange}
+                  minDate={minDate}
+                  maxDate={maxDate}
                   KeyboardButtonProps={{
                     'aria-label': 'change end date',
-                  }}
-                />
-                <KeyboardTimePicker
-                  margin="normal"
-                  id="time-picker"
-                  label="Start Time"
-                  value={selectedStartDate}
-                  onChange={handleStartDateChange}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change start time',
-                  }}
-                />
-                <KeyboardTimePicker
-                  margin="normal"
-                  id="time-picker"
-                  label="End Time"
-                  value={selectedEndDate}
-                  onChange={handleEndDateChange}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change end time',
                   }}
                 />
               </Grid>
@@ -141,20 +160,16 @@ function ListingPage(props) {
                 value={carAmount}
                 onChange={handleCarAmountChange}
               >
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
-                <MenuItem value={5}>5</MenuItem>
+                {menuList}
               </Select>
             </FormControl>
-            <Button variant="contained" color="secondary" className={classes.submitButton} fullWidth>
+            <Button onClick={onReserve} variant="contained" color="secondary" className={classes.submitButton} fullWidth>
               Reserve
             </Button>
           </Box>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
@@ -167,4 +182,4 @@ ListingPage.propTypes = {
   hourPrice: PropTypes.number,
 };
 
-export default ListingPage;
+export default withFirebase(ListingPage);
