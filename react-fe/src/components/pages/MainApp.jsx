@@ -50,23 +50,18 @@ const MainApp = () => {
   const responseToListings = (resp) => {
     const newListings = [];
     for (const listing of resp) {
-      Geocode.fromAddress(listing.location).then((response) => {
-        const { lat, lng } = response.results[0].geometry.location;
-        newListings.push(
-          <Grid item key={listing.listingId}>
-            <ParkSpotListingCard
-              listingId={listing.listingId}
-              imgUrl={listing.imgUrl}
-              size={listing.size}
-              location={listing.location}
-              numberAvail={listing.numberAvail}
-              dayPrice={listing.dayPrice}
-              lat={lat}
-              lng={lng}
-            />
-          </Grid>
-        )
-      })
+      newListings.push(
+        <Grid item key={listing.listingId}>
+          <ParkSpotListingCard
+            listingId={listing.listingId}
+            imgUrl={listing.imgUrl}
+            size={listing.size}
+            location={listing.location}
+            numberAvail={listing.numberAvail}
+            dayPrice={listing.dayPrice}
+          />
+        </Grid>
+      );
     }
     setListings(newListings);
     setLoading(false);
@@ -108,30 +103,12 @@ const MainApp = () => {
           : null}
         {listings}
       </Grid>
-      {loading ?
-        <ReactMapGL
-          {...viewport}
-          mapboxApiAccessToken={MAPBOX_TOKEN}
-          onViewportChange={(viewport) => setViewport(viewport)}
-        >
-          {listings.map((listing) => (
-              <Marker
-                  key={listing.listingId}
-                  longitude={listing.lng}
-                  latitude={listing.lat}
-              >
-                <Button
-                  class={'marker-btn'}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setSelectedParkSpot(listing);
-                  }}
-                >
-                  <h1>DFLS;DFKJAS;LDFKJSDFASDFSF</h1>
-                </Button>
-              </Marker>
-          ))}
-        </ReactMapGL> : null}
+      <ReactMapGL
+        {...viewport}
+        mapboxApiAccessToken={MAPBOX_TOKEN}
+        onViewportChange={(viewport) => setViewport(viewport)}
+      >
+      </ReactMapGL>
     </div>
   );
 };
