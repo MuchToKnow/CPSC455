@@ -50,8 +50,8 @@ const MainApp = () => {
   const responseToListings = (resp) => {
     const newListings = [];
     for (const listing of resp) {
-      let latlng = getLatLongFromAddress(listing.location)
-      latlng.then(
+      Geocode.fromAddress(listing.location).then((response) => {
+        const { lat, lng } = response.results[0].geometry.location;
         newListings.push(
           <Grid item key={listing.listingId}>
             <ParkSpotListingCard
@@ -61,16 +61,15 @@ const MainApp = () => {
               location={listing.location}
               numberAvail={listing.numberAvail}
               dayPrice={listing.dayPrice}
-              latlng={getLatLongFromAddress(listing.location)}
+              lat={lat}
+              lng={lng}
             />
           </Grid>
         )
-      );
+      })
     }
     setListings(newListings);
     setLoading(false);
-
-
   };
 
 
@@ -118,8 +117,8 @@ const MainApp = () => {
           {listings.map((listing) => (
               <Marker
                   key={listing.listingId}
-                  longitude={listing.latlng[1]}
-                  latitude={listing.latlng[0]}
+                  longitude={listing.lng}
+                  latitude={listing.lat}
               >
                 <Button
                   class={'marker-btn'}

@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { Constants } from '../Constants';
 
 const ParkSpotListingCard = (props) => {
-  const { listingId, imgUrl, size, location, numberAvail, dayPrice, latlng } = props;
+  const { listingId, imgUrl, size, location, numberAvail, dayPrice, lat, lng } = props;
   const headerStr = size + " parking spot at " + location;
   const availabilityStr = String(numberAvail) + " spots available";
   const dayPriceStr = "$" + String(dayPrice) + "/day";
@@ -60,7 +60,8 @@ ParkSpotListingCard.propTypes = {
   numberAvail: PropTypes.number,
   dayPrice: PropTypes.number,
   hourPrice: PropTypes.number,
-  latlng: PropTypes.array
+  lat: PropTypes.number,
+  lng: PropTypes.string,
 };
 
 export default ParkSpotListingCard;
