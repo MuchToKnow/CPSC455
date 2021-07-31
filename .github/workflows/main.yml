@@ -14,6 +14,31 @@ jobs:
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_email: justindc99edu@gmail.com
-          heroku_app_name: project-455-cob
+          heroku_app_name: parkin-455
           appdir: react-fe
           buildpack: heroku/nodejs
+
+  # based on: https://javascript.plainenglish.io/how-to-automate-firebase-app-deployment-with-github-actions-beb26e458e17
+  build-be:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./firebase/functions
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: install libs
+      run: npm install
+      working-directory: ${{env.working-directory}}
+    - name: install firebase
+      run: npm i firebase-tools -g
+    - name: deploy
+      working-directory: ${{env.working-directory}}
+      run: pwd && ls && firebase deploy --token ${{ secrets.FIREBASE_CI_KEY }}

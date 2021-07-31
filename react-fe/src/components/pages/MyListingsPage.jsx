@@ -51,7 +51,7 @@ const MyListingsPage = (props) => {
     };
   };
 
-  const updateListing = (listingId, startDate, endDate, imgUrl, numberAvail, location, dayPrice, instructions, type, size) => {
+  const updateListing = (listingId, startDate, endDate, imgUrl, numberAvail, location, dayPrice, description, instructions, type, size) => {
     axios.put(url + "/listings/" + listingId, {
       startDate: startDate.toDateString(),
       endDate: endDate.toDateString(),
@@ -60,6 +60,7 @@ const MyListingsPage = (props) => {
       size,
       location,
       dayPrice,
+      description,
       instructions,
       type,
     }, authUserHeaders).then(() => {
@@ -70,42 +71,34 @@ const MyListingsPage = (props) => {
     });
   };
 
-  useEffect(() => {
-    // Sets authed user when firebase loads current user
-    props.firebase.auth.onAuthStateChanged(authUser => {
-      if (authUser) {
-        authUser.getIdToken().then((token) => {
-          const reqHeaders = {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          };
-          setAuthUserHeaders(reqHeaders);
-          axios.get(url + "/listings/mine", reqHeaders).then((resp) => {
-            setRespListings(resp.data);
-            setLoading(false);
-          });
-        });
-      } else {
-        setAuthUserHeaders(null);
-      }
-    });
-  }, []);
+  const setAuthHeaders = () => {
+    if (props.firebase.getAuthHeaders()) {
+      setAuthUserHeaders(props.firebase.getAuthHeaders());
+    } else {
+      setTimeout(setAuthHeaders, 100);
+    }
+  };
+
+  useEffect(setAuthHeaders, []);
 
   useEffect(() => {
     setLoading(true);
     if (searchTerm && authUserHeaders) {
-      axios.get(url + "/listings/mine/search?searchTerm=" + searchTerm, authUserHeaders).then((resp) => {
+      axios.get(url + "/listings/mine/search?searchTerm=" + searchTerm, props.firebase.getAuthHeaders()).then((resp) => {
         setRespListings(resp.data);
+        setLoading(false);
+      }).catch((err) => {
         setLoading(false);
       });
     } else if (!searchTerm && authUserHeaders) {
-      axios.get(url + "/listings/mine", authUserHeaders).then((resp) => {
+      axios.get(url + "/listings/mine", props.firebase.getAuthHeaders()).then((resp) => {
         setRespListings(resp.data);
+        setLoading(false);
+      }).catch((err) => {
         setLoading(false);
       });
     }
-  }, [searchTerm]);
+  }, [searchTerm, url, authUserHeaders]);
 
   const listings = [];
   for (const listing of respListings) {
@@ -120,6 +113,7 @@ const MyListingsPage = (props) => {
                 location={listing.location}
                 numberAvail={listing.numberAvail}
                 dayPrice={listing.dayPrice}
+                listingId={listing.listingId}
               />
             </Grid>
             <Grid item>

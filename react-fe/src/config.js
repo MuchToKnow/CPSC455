@@ -11,6 +11,5 @@ const prod = {
 };
 
 const config = process.env.ENV === 'dev' ? dev : prod;
-export default {
-  ...config
-};
+const exp = { ...config };
+export default exp;

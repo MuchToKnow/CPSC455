@@ -47,7 +47,7 @@ const MainApp = () => {
     axios.get(url + "/listings/").then((resp) => {
       responseToListings(resp.data);
     });
-  }, []);
+  }, [url]);
 
   useEffect(() => {
     setLoading(true);
@@ -60,7 +60,7 @@ const MainApp = () => {
         responseToListings(resp.data);
       });
     }
-  }, [searchTerm]);
+  }, [searchTerm, url]);
 
   return (
     <div className="App">
