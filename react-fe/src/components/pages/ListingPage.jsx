@@ -4,7 +4,7 @@ import '../../styling/ListingPage.css';
 import Header from '../organisms/Header';
 import FeatureList from '../organisms/FeatureList';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Box, TextField, Typography, Grid, FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
+import { Button, Box, TextField, Typography, Grid, FormControl, InputLabel, Select, MenuItem, Paper, Divider, List, ListItem, ListItemText} from "@material-ui/core";
 import DateFnsUtils from '@date-io/date-fns';
 import Rating from '@material-ui/lab/Rating';
 import {
@@ -16,7 +16,6 @@ import config from "../../config";
 import { Constants } from "../Constants";
 import { withFirebase } from '../Firebase';
 import PropTypes from "prop-types";
-import { withFirebase } from '../Firebase';
 
 function ListingPage(props) {
     const useStyles = makeStyles((theme) => ({
@@ -35,6 +34,11 @@ function ListingPage(props) {
         },
         ratingSubmitButton: {
             width: '5ch'
+        },
+        paper: {
+            padding: theme.spacing(2),
+            margin: 'auto',
+            maxWidth: 500,
         }
     }));
 
@@ -52,7 +56,7 @@ function ListingPage(props) {
     const [description, setDescription] = useState(null);
     const [rating, setRating] = React.useState(0);
     const [ratingComment, setRatingComment] = React.useState("");
-    const [reviews, setReviews] = React.useState([]);
+    const [reviewsList, setReviewsList] = React.useState([]);
     const [authUserHeaders, setAuthUserHeaders] = useState(null);
     const [listingObj, setListingObj] = useState(null);
     const url = config.api.url;
@@ -86,11 +90,11 @@ function ListingPage(props) {
             location: listingObj.location,
             numberAvail: listingObj.numberAvail,
             dayPrice: listingObj.dayPrice,
+            // reviews: listingObj.reviews,
             reviews: [...listingObj.reviews, newReview],
         }
         axios.put(url + "/listings/" + listingId, listing, authUserHeaders).then(() => {
             alert("Successfully updated listing");
-            axios.get(url + "/listings/single/" + listingId).then((resp) => responseToListing(resp.data)).catch(e => console.log(e))
         }).catch(e => console.log(e))
     };
 
@@ -105,7 +109,7 @@ function ListingPage(props) {
         setDescription(resp.description);
         setMinDate(new Date(resp.startDate));
         setMaxDate(new Date(resp.endDate));
-        setReviews(resp.reviews);
+        setReviewsList([...reviewsList, resp.reviews]);
     };
 
     useEffect(() => {
@@ -141,6 +145,17 @@ function ListingPage(props) {
             <MenuItem value={i}>{String(i)}</MenuItem>
         );
     }
+
+    // const allReviews = [];
+    // for (const review of reviewsList) {
+    //     allReviews.push(
+    //         <ListItem alignItems="flex-start">
+    //             <ListItemText
+    //                 primary={review.comment}
+    //             />
+    //         </ListItem>
+    //     );
+    // }
 
     return (
         <div>
@@ -205,29 +220,105 @@ function ListingPage(props) {
                             Reserve
                         </Button>
                     </Box>
-                    <Box component="fieldset" mb={3} borderColor="transparent">
-                        <Typography component="legend">Write a review:</Typography>
-                        <Rating
-                            name="simple-controlled"
-                            value={rating}
-                            onChange={(event, newValue) => {
-                                setRating(newValue);
-                            }}
-                        />
-                    </Box>
-                    <TextField
-                        id="outlined-multiline-static"
-                        label="Comment"
-                        multiline
-                        rows={4}
-                        value={ratingComment}
-                        onChange={handleRatingCommentChange}
-                        variant="outlined"
-                    />
-                    <Button variant="contained" color="secondary" className={classes.ratingSubmitButton} onClick={handleSubmitRating}>
-                        Submit
-                    </Button>
-                    <Typography variant="h5" className="reviews">{reviews}</Typography>
+                    <div className="reviewsAndSubmitReview">
+                        <div className="userReviews">
+                            <Paper className={classes.paper}>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm container>
+                                        <Grid item xs container direction="column" spacing={2}>
+                                            <Grid item xs>
+                                                <Rating name="read-only" value={5} readOnly />
+                                                <Typography variant="body2" gutterBottom>
+                                                    Good parking spot! 10/10
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm container>
+                                        <Grid item xs container direction="column" spacing={2}>
+                                            <Grid item xs>
+                                                <Rating name="read-only" value={5} readOnly />
+                                                <Typography variant="body2" gutterBottom>
+                                                    Excellent place
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm container>
+                                        <Grid item xs container direction="column" spacing={2}>
+                                            <Grid item xs>
+                                                <Rating name="read-only" value={4} readOnly />
+                                                <Typography variant="body2" gutterBottom>
+                                                    easy access, nice owners!
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm container>
+                                        <Grid item xs container direction="column" spacing={2}>
+                                            <Grid item xs>
+                                                <Rating name="read-only" value={1} readOnly />
+                                                <Typography variant="body2" gutterBottom>
+                                                    someone broke into my car
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Paper>
+                        </div>
+                        <div className="reviewBox">
+                            <Box component="fieldset" mb={3} borderColor="transparent">
+                                <Typography component="legend">Write a review:</Typography>
+                                <Rating
+                                    name="simple-controlled"
+                                    value={rating}
+                                    onChange={(event, newValue) => {
+                                        setRating(newValue);
+                                    }}
+                                />
+                            </Box>
+                            <TextField
+                                id="outlined-multiline-static"
+                                label="Comment"
+                                multiline
+                                rows={4}
+                                value={ratingComment}
+                                onChange={handleRatingCommentChange}
+                                variant="outlined"
+                                style={{marginLeft: 20, marginTop: -20, marginBottom: 10}}
+                            />
+                            <Button
+                                variant="contained" color="secondary"
+                                style={{marginLeft: 20, padding: 0, paddingTop: 5, paddingBottom: 5, display: "block"}}
+                                className={classes.ratingSubmitButton}
+                                onClick={handleSubmitRating}
+                            >
+                                Submit
+                            </Button>
+                        </div>
+                        {/*<List className={classes.reviewsForThisListing}>*/}
+                        {/*    <ListItem alignItems="flex-start">*/}
+                        {/*        <Rating name="read-only" value={5} readOnly />*/}
+                        {/*        <ListItemText*/}
+                        {/*            primary="Good parking spot! 10/10"*/}
+                        {/*        />*/}
+                        {/*    </ListItem>*/}
+                        {/*    <Divider variant="inset" component="li" />*/}
+                        {/*    <ListItem alignItems="flex-start">*/}
+                        {/*        <Rating name="read-only" value={4.5} readOnly />*/}
+                        {/*        <ListItemText*/}
+                        {/*            primary="Good experience"*/}
+                        {/*        />*/}
+                        {/*    </ListItem>*/}
+                        {/*</List>*/}
+                    </div>
                 </div>
             </div>
         </div>
