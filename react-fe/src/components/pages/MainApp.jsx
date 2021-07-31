@@ -2,12 +2,14 @@ import Header from '../organisms/Header';
 import ParkSpotListingCard from '../molecules/ParkSpotListingCard';
 import { withFirebase } from '../Firebase';
 import { useEffect, useState } from 'react';
+import ReactMapGL, {Marker} from "react-map-gl";
 import config from '../../config';
 import axios from 'axios';
-import { Grid, Typography } from '@material-ui/core';
+import {Button, Grid, Typography} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Geocode from "react-geocode";
 
 const useStyles = makeStyles({
   header_text: {
@@ -17,11 +19,33 @@ const useStyles = makeStyles({
 });
 
 const MainApp = () => {
+  let MAPBOX_TOKEN = "pk.eyJ1IjoiZGF2aWR3NyIsImEiOiJja3Jwc3RpdGQ4cjUyMm9tbjh6MmU2YzN6In0.rKQNwIwSGSGjw_u8UHM5XQ";
+
   const classes = useStyles();
   const url = config.api.url;
   const [listings, setListings] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedParkSpot, setSelectedParkSpot] = useState(null);
+  const [viewport, setViewport] = useState({
+    latitude: 49.269520,
+    longitude: -123.251240,
+    width: '100vw',
+    height: '100vh',
+    zoom:10
+  });
+
+  const getLatLongFromAddress = (address) => {
+    Geocode.fromAddress(address).then(
+        (response) => {
+          const { lat, lng } = response.results[0].geometry.location;
+          return [lat, lng];
+        },
+        (error) => {
+          console.error(error);
+        }
+    );
+  }
 
   const responseToListings = (resp) => {
     const newListings = [];
@@ -42,6 +66,7 @@ const MainApp = () => {
     setListings(newListings);
     setLoading(false);
   };
+
 
   useEffect(() => {
     axios.get(url + "/listings/").then((resp) => {
@@ -78,6 +103,12 @@ const MainApp = () => {
           : null}
         {listings}
       </Grid>
+      <ReactMapGL
+        {...viewport}
+        mapboxApiAccessToken={MAPBOX_TOKEN}
+        onViewportChange={(viewport) => setViewport(viewport)}
+      >
+      </ReactMapGL>
     </div>
   );
 };
