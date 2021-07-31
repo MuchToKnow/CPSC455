@@ -101,6 +101,8 @@ router.post('/', authMiddleware, (req, res, next) => {
     creatorUserId: req.user.uid,
     email: req.user.email,
     listingId: uuid(),
+    reviews: {rating: 5, comment: "good parking spot! 10/10", user: req.user.uid},
+    test: "dwadawdaw",
     ...req.body
   };
   db.getInstance(async (db) => {

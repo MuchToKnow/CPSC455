@@ -21,7 +21,7 @@
 .belowImgContainer {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 img {
@@ -35,4 +35,19 @@ img {
     height: 100%;
     margin-left: 2%;
     min-width: auto !important;
+}
+
+.reviewBox{
+    float: right;
+    margin-left: 20px;
+}
+
+.reviewsAndSubmitReview {
+    margin-top: 50px;
+    margin-left: 20px;
+}
+
+.userReviews{
+    display: block;
+    float: left;
 }
