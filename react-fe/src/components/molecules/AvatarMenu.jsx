@@ -18,6 +18,10 @@ const AvatarMenu = (props) => {
     window.location.href = "/createListing";
   };
 
+  const redirectToEditInfo = () => {
+    window.location.href = "/editUserInfo";
+  };
+
   const handleClose = () => {
     setShown(false);
   };
@@ -33,6 +37,7 @@ const AvatarMenu = (props) => {
         transformOrigin={{ vertical: "top", horizontal: "center" }}
         anchorEl={anchorEl}
         getContentAnchorEl={null}>
+        <MenuItem onClick={redirectToEditInfo}>Edit Info</MenuItem>
         <MenuItem onClick={redirectToCreateListing}>Create Listing</MenuItem>
         <MenuItem onClick={redirectToMyListings}>My Listings</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>

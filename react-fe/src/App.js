@@ -5,6 +5,7 @@ import MainApp from './components/pages/MainApp';
 import ListingPage from './components/pages/ListingPage';
 import MyListingsPage from './components/pages/MyListingsPage';
 import CreateListingPage from "./components/pages/CreateListingPage";
+import EditUserInfoPage from "./components/pages/EditUserInfoPage";
 
 function App() {
   return (
@@ -27,6 +28,9 @@ function App() {
           <CreateListingPage />
         </Route>
 
+        <Route exact path="/editUserInfo">
+          <EditUserInfoPage />
+        </Route>
       </Switch>
     </Router>
   );
