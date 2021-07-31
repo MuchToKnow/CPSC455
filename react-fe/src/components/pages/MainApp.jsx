@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import ReactMapGL, {Marker} from "react-map-gl";
 import config from '../../config';
 import axios from 'axios';
-import { Grid, Typography } from '@material-ui/core';
+import {Button, Grid, Typography} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -26,6 +26,7 @@ const MainApp = () => {
   const [listings, setListings] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedParkSpot, setSelectedParkSpot] = useState(null);
   const [viewport, setViewport] = useState({
     latitude: 49.269520,
     longitude: -123.251240,
@@ -34,39 +35,44 @@ const MainApp = () => {
     zoom:10
   });
 
-  const responseToListings = (resp) => {
-    const newListings = [];
-    for (const listing of resp) {
-      newListings.push(
-        <Grid item key={listing.listingId}>
-          <ParkSpotListingCard
-            listingId={listing.listingId}
-            imgUrl={listing.imgUrl}
-            size={listing.size}
-            location={listing.location}
-            numberAvail={listing.numberAvail}
-            dayPrice={listing.dayPrice}
-          />
-        </Grid>
-      );
-    }
-    setListings(newListings);
-    setLoading(false);
-  };
-
-  const displayListingLocationOnMap = (listing) => {
-    Geocode.fromAddress(listing.location).then(
+  const getLatLongFromAddress = (address) => {
+    Geocode.fromAddress(address).then(
         (response) => {
-          let { lat, lng } = response.results[0].geometry.location;
-          <Marker longitude={lng} latitude={lat}>
-            <h1>PARKING</h1>
-          </Marker>
+          const { lat, lng } = response.results[0].geometry.location;
+          return [lat, lng];
         },
         (error) => {
           console.error(error);
         }
     );
   }
+
+  const responseToListings = (resp) => {
+    const newListings = [];
+    for (const listing of resp) {
+      let latlng = getLatLongFromAddress(listing.location)
+      latlng.then(
+        newListings.push(
+          <Grid item key={listing.listingId}>
+            <ParkSpotListingCard
+              listingId={listing.listingId}
+              imgUrl={listing.imgUrl}
+              size={listing.size}
+              location={listing.location}
+              numberAvail={listing.numberAvail}
+              dayPrice={listing.dayPrice}
+              latlng={getLatLongFromAddress(listing.location)}
+            />
+          </Grid>
+        )
+      );
+    }
+    setListings(newListings);
+    setLoading(false);
+
+
+  };
+
 
   useEffect(() => {
     axios.get(url + "/listings/").then((resp) => {
@@ -103,14 +109,30 @@ const MainApp = () => {
           : null}
         {listings}
       </Grid>
-      <ReactMapGL
+      {loading ?
+        <ReactMapGL
           {...viewport}
           mapboxApiAccessToken={MAPBOX_TOKEN}
           onViewportChange={(viewport) => setViewport(viewport)}
-
-      >
-        {listings.map(displayListingLocationOnMap)}
-      </ReactMapGL>
+        >
+          {listings.map((listing) => (
+              <Marker
+                  key={listing.listingId}
+                  longitude={listing.latlng[1]}
+                  latitude={listing.latlng[0]}
+              >
+                <Button
+                  class={'marker-btn'}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedParkSpot(listing);
+                  }}
+                >
+                  <h1>DFLS;DFKJAS;LDFKJSDFASDFSF</h1>
+                </Button>
+              </Marker>
+          ))}
+        </ReactMapGL> : null}
     </div>
   );
 };

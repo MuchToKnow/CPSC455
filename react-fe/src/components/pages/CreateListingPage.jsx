@@ -4,8 +4,6 @@ import ListingForm from '../organisms/ListingForm';
 import axios from "axios";
 import { useEffect, useState } from "react";
 import config from "../../config";
-import Geocode from "react-geocode";
-import {Marker} from "react-map-gl";
 
 const CreateListingPage = (props) => {
     const url = config.api.url;
