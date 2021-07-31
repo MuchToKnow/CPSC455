@@ -107,6 +107,7 @@ router.post('/', authMiddleware, (req, res, next) => {
     location,
     numberAvail,
     dayPrice,
+    reviews: [],
   };
   db.getInstance(async (db) => {
     try {

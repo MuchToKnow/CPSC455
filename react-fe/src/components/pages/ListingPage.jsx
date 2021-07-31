@@ -1,12 +1,13 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import '../../styling/ListingPage.css';
 import Header from '../organisms/Header';
 import UserAvatar from '../molecules/UserAvatar';
 import FeatureList from '../organisms/FeatureList';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Box, Typography, Grid, FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
+import { Button, Box, TextField, Typography, Grid, FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
 import DateFnsUtils from '@date-io/date-fns';
+import Rating from '@material-ui/lab/Rating';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -16,6 +17,7 @@ import axios from "axios";
 import config from "../../config";
 import {Constants} from "../Constants";
 import PropTypes from "prop-types";
+import { withFirebase } from '../Firebase';
 
 function ListingPage(props) {
     const useStyles = makeStyles((theme) => ({
@@ -31,6 +33,9 @@ function ListingPage(props) {
         },
         descriptionText: {
             marginBottom: theme.spacing(2),
+        },
+        ratingSubmitButton: {
+            width: '5ch'
         }
     }));
 
@@ -43,6 +48,11 @@ function ListingPage(props) {
     const [location, setLocation] = React.useState(null);
     const [numberAvail, setNumberAvail] = React.useState(null);
     const [dayPrice, setDayPrice] = React.useState(null);
+    const [rating, setRating] = React.useState(0);
+    const [ratingComment, setRatingComment] = React.useState("");
+    const [reviews, setReviews] = React.useState([]);
+    const [authUserHeaders, setAuthUserHeaders] = useState(null);
+    const [listingObj, setListingObj] = useState(null);
     const url = config.api.url;
     const { listingId } = useParams();
 
@@ -55,19 +65,65 @@ function ListingPage(props) {
     const handleCarAmountChange = (event) => {
         setCarAmount(event.target.value);
     };
+    const handleRatingCommentChange = (event) => {
+        setRatingComment(event.target.value);
+    };
+
+    const handleSubmitRating = () => {
+        let newReview = {
+            rating: rating,
+            comment: ratingComment,
+            user: authUserHeaders,
+        };
+        let listing = {
+            creatorUserId: listingObj.creatorUserId,
+            email: listingObj.email,
+            listingId: listingObj.listingId,
+            imgUrl: listingObj.imgUrl,
+            size: listingObj.size,
+            location: listingObj.location,
+            numberAvail: listingObj.numberAvail,
+            dayPrice: listingObj.dayPrice,
+            reviews: [...listingObj.reviews, newReview],
+        }
+        axios.put(url + "/listings/" + listingId, listing, authUserHeaders).then(() => {
+            alert("Successfully updated listing");
+            axios.get(url + "/listings/single/" + listingId).then((resp) => responseToListing(resp.data)).catch(e => console.log(e))
+        }).catch(e => console.log(e))
+    };
 
     const responseToListing = (resp) => {
+        console.log(resp);
+        setListingObj(resp);
         setImgUrl(resp.imgUrl);
         setSize(resp.size);
         setLocation(resp.location);
         setNumberAvail(resp.numberAvail);
         setDayPrice(resp.dayPrice);
+        setReviews(resp.reviews);
     };
 
     useEffect(() => {
         axios.get(url + "/listings/single/" + listingId).then((resp) => responseToListing(resp.data)).catch(e => console.log(e))
     }, []);
 
+    useEffect(() => {
+        // Sets authed user when firebase loads current user
+        props.firebase.auth.onAuthStateChanged(authUser => {
+            if (authUser) {
+                authUser.getIdToken().then((token) => {
+                    const reqHeaders = {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    };
+                    setAuthUserHeaders(reqHeaders);
+                });
+            } else {
+                setAuthUserHeaders(null);
+            }
+        });
+    }, []);
 
     return (
         <div>
@@ -153,6 +209,29 @@ function ListingPage(props) {
                       Reserve
                     </Button>
                 </Box>
+                <Box component="fieldset" mb={3} borderColor="transparent">
+                    <Typography component="legend">Write a review:</Typography>
+                    <Rating
+                        name="simple-controlled"
+                        value={rating}
+                        onChange={(event, newValue) => {
+                            setRating(newValue);
+                        }}
+                    />
+                </Box>
+                <TextField
+                    id="outlined-multiline-static"
+                    label="Comment"
+                    multiline
+                    rows={4}
+                    value={ratingComment}
+                    onChange={handleRatingCommentChange}
+                    variant="outlined"
+                />
+                <Button variant="contained" color="secondary" className={classes.ratingSubmitButton} onClick={handleSubmitRating}>
+                    Submit
+                </Button>
+                <Typography variant="h5" className="reviews">{reviews}</Typography>
             </div>
             </div>
         </div>
@@ -168,4 +247,4 @@ ListingPage.propTypes = {
     hourPrice: PropTypes.number,
 };
 
-export default ListingPage;
+export default withFirebase(ListingPage);
