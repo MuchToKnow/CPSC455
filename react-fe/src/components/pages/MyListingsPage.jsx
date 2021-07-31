@@ -9,6 +9,7 @@ import { Grid, Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ListingForm from '../organisms/ListingForm';
@@ -27,6 +28,7 @@ const MyListingsPage = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [authUserHeaders, setAuthUserHeaders] = useState(null);
   const [activeEdit, setActiveEdit] = useState("");
+  const [activeBookings, setActiveBookings] = useState("");
   const [loading, setLoading] = useState(true);
 
   const fetchListings = () => {
@@ -118,6 +120,18 @@ const MyListingsPage = (props) => {
             </Grid>
             <Grid item>
               <Button onClick={() => {
+                if (activeBookings === listing.listingId) {
+                  setActiveBookings("");
+                } else {
+                  setActiveBookings(listing.listingId);
+                }
+              }
+              }>
+                <LibraryBooksIcon />
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button onClick={() => {
                 if (activeEdit === listing.listingId) {
                   setActiveEdit("");
                 } else {
@@ -152,6 +166,11 @@ const MyListingsPage = (props) => {
                 instr={listing.instructions}
                 parkingSize={listing.size}
                 parkingType={listing.type} />
+            </Grid> : null
+          }
+          {activeBookings === listing.listingId ?
+            <Grid item>
+              <p>Active bookings placeholder</p>
             </Grid> : null
           }
         </Grid>
