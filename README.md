@@ -1,4 +1,4 @@
-Project Description:
+Project Description: Full stack web application that gives users the ability to park conveniently and for a lower price at spaces owned by other users. Users can also list their own properties as parking spots for other's to use for a passive income. This solves the problem of parking shortage and utilizes space more efficiently by bringing more parking spaces to the public market without sacrificing more space for parking.  
 
 ○ Who is it for?
     
