@@ -132,6 +132,7 @@ const MainApp = () => {
           : null}
         {listings}
       </Grid>
+      <div id="map"></div>
       <ReactMapGL
         {...viewport}
         mapboxApiAccessToken={MAPBOX_TOKEN}
