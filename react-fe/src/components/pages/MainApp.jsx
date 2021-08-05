@@ -10,6 +10,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Geocode from "react-geocode";
+import mapboxgl from "mapbox-gl"
+import mapboxSdk from "@mapbox/mapbox-sdk/services/geocoding"
 
 const useStyles = makeStyles({
   header_text: {
@@ -35,16 +37,37 @@ const MainApp = () => {
     zoom:10
   });
 
-  const getLatLongFromAddress = (address) => {
-    Geocode.fromAddress(address).then(
-        (response) => {
-          const { lat, lng } = response.results[0].geometry.location;
-          return [lat, lng];
-        },
-        (error) => {
-          console.error(error);
+  mapboxgl.accessToken = "pk.eyJ1IjoiZGF2aWR3NyIsImEiOiJja3Jwc3RpdGQ4cjUyMm9tbjh6MmU2YzN6In0.rKQNwIwSGSGjw_u8UHM5XQ";
+
+  const createMarkerForListing = (listing) => {
+    let mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+    mapboxClient
+      .forwardGeocode({
+        query: String(listing.location),
+        autocomplete: false,
+        limit: 1
+      })
+      .send()
+      .then(function (response) {
+        if (
+          response &&
+          response.body &&
+          response.body.features &&
+          response.body.features.length
+        ) {
+          var feature = response.body.features[0];
+
+          var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: feature.center,
+            zoom: 10
+          });
+
+          // Create a marker and add it to the map.
+          new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
         }
-    );
+      });
   }
 
   const responseToListings = (resp) => {
@@ -71,6 +94,7 @@ const MainApp = () => {
   useEffect(() => {
     axios.get(url + "/listings/").then((resp) => {
       responseToListings(resp.data);
+      listings.map((listing) => {createMarkerForListing(listing);});
     });
   }, [url]);
 
@@ -108,6 +132,7 @@ const MainApp = () => {
         mapboxApiAccessToken={MAPBOX_TOKEN}
         onViewportChange={(viewport) => setViewport(viewport)}
       >
+        {listings.map(createMarkerForListing)}
       </ReactMapGL>
     </div>
   );
