@@ -6,7 +6,7 @@ const dev = {
 
 const prod = {
   api: {
-    url: "http://localhost:5000/cpsc455/us-central1/api"
+    url: "https://us-central1-cpsc455.cloudfunctions.net/api"
   }
 };
 
