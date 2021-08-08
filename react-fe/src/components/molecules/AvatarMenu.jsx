@@ -22,6 +22,10 @@ const AvatarMenu = (props) => {
     window.location.href = "/editUserInfo";
   };
 
+  const redirectToMyBookings = () => {
+    window.location.href = "/mybookings";
+  };
+
   const handleClose = () => {
     setShown(false);
   };
@@ -40,6 +44,7 @@ const AvatarMenu = (props) => {
         <MenuItem onClick={redirectToEditInfo}>Edit Info</MenuItem>
         <MenuItem onClick={redirectToCreateListing}>Create Listing</MenuItem>
         <MenuItem onClick={redirectToMyListings}>My Listings</MenuItem>
+        <MenuItem onClick={redirectToMyBookings}>My Bookings</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
       {/*<CreateListingPage open={createListingOpen} setOpen={setCreateListingOpen} />*/}

@@ -17,7 +17,7 @@ const CreateListingPage = (props) => {
         }
     };
 
-    useEffect(setAuthHeaders, []);
+    useEffect(setAuthHeaders, [props.firebase, setAuthHeaders]);
 
     const createListing = (startDate, endDate, imgUrl, numberAvail, location, dayPrice, description, instructions, type, size) => {
         axios.post(url + "/listings/", {

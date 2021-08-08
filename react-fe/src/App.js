@@ -6,6 +6,7 @@ import ListingPage from './components/pages/ListingPage';
 import MyListingsPage from './components/pages/MyListingsPage';
 import CreateListingPage from "./components/pages/CreateListingPage";
 import EditUserInfoPage from "./components/pages/EditUserInfoPage";
+import MyBookingsTable from './components/pages/MyBookingsPage';
 
 function App() {
   return (
@@ -20,7 +21,10 @@ function App() {
         <Route exact path="/myListings">
           <MyListingsPage />
         </Route>
-        <Route path="/listing-page-example/:listingId">
+        <Route exact path="/myBookings">
+          <MyBookingsTable />
+        </Route>
+        <Route path="/listing-page/:listingId">
           <ListingPage />
         </Route>
 

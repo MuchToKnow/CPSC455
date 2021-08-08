@@ -9,6 +9,24 @@ router.get('/mine', authMiddleware, (req, res, next) => {
   db.getInstance(async (db) => {
     try {
       const result = await db.collection('bookings').find({ creatorUserId: req.user.uid }).toArray();
+      const proms = [];
+      for (const bk of result) {
+        proms.push(db.collection('listings').findOne({ listingId: bk.listingId }));
+      }
+      await Promise.all(proms).then((values) => {
+        const listings = {};
+        console.log(values);
+        for (const listing of values) {
+          if (listing !== null) {
+            console.log({ listing });
+            listings[listing.listingId] = listing;
+          }
+        }
+        for (const bk in result) {
+          result[bk].listing = listings[result[bk].listingId];
+        }
+        console.log({ values, listings, result });
+      });
       res.status(200).json(result);
       return next();
     } catch (err) {
