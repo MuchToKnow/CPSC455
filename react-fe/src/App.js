@@ -6,6 +6,7 @@ import ListingPage from './components/pages/ListingPage';
 import MyListingsPage from './components/pages/MyListingsPage';
 import CreateListingPage from "./components/pages/CreateListingPage";
 import EditUserInfoPage from "./components/pages/EditUserInfoPage";
+import SupportPage from "./components/pages/SupportPage";
 
 function App() {
   return (
@@ -30,6 +31,10 @@ function App() {
 
         <Route exact path="/editUserInfo">
           <EditUserInfoPage />
+        </Route>
+
+        <Route exact path="/support">
+          <SupportPage />
         </Route>
       </Switch>
     </Router>
