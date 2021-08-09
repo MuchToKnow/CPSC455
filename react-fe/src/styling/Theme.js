@@ -7,8 +7,8 @@ export const theme = createMuiTheme({
     secondary: {
       main: "rgb(171,183,239)"
     },
-    tertiary: {
-      main: '#0a1d37'
-    }
+    error: {
+      main: "#b00020"
+    },
   }
 });
