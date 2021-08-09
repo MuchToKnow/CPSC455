@@ -100,9 +100,10 @@ router.post('/', authMiddleware, (req, res, next) => {
   const listingObj = {
     creatorUserId: req.user.uid,
     email: req.user.email,
+    firstName: req.user.firstName,
+    lastName: req.user.lastName,
     listingId: uuid(),
-    reviews: {rating: 5, comment: "good parking spot! 10/10", user: req.user.uid},
-    test: "dwadawdaw",
+    reviews: [],
     ...req.body
   };
   db.getInstance(async (db) => {
@@ -167,6 +168,23 @@ router.put('/:listingId', authMiddleware, (req, res, next) => {
       res.status(400).json({ error: err });
       return next();
     }
+    try {
+      await db.collection('listings').updateOne({ listingId: req.params.listingId }, updateDoc);
+      res.status(200).json("Success");
+      return next();
+    } catch (err) {
+      res.status(400).json({ error: err });
+      return next();
+    }
+  });
+});
+
+/* PATCH update reviews for single listing. */
+router.patch('/:listingId', (req, res, next) => {
+  db.getInstance(async (db) => {
+    const updateDoc = {
+      $set: req.body
+    };
     try {
       await db.collection('listings').updateOne({ listingId: req.params.listingId }, updateDoc);
       res.status(200).json("Success");
