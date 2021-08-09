@@ -1,6 +1,6 @@
 import {
   TextField,
-  Box, FormControl, InputLabel, Select, MenuItem, Button
+  Box, FormControl, InputLabel, Select, MenuItem, Button, DialogContent
 } from '@material-ui/core';
 import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
@@ -73,20 +73,20 @@ const ListingForm = (props) => {
   // };
 
   const handleSubmit = (event) => {
-    // event.preventDefault();
-    // props.firebase.firebaseRegisterUserEmailPass(email, password).then(() => {
-    //   window.location.href = '/app';
-    //   handleClose();
-    // }).catch(() => {
-    //   // TODO: Error message for user
-    // });
+    event.preventDefault();
+    props.firebase.firebasePasswordUpdate(password).then(() => {
+      window.location.href = '/app';
+    }).catch(() => {
+      // TODO: Error message for user
+    });
   };
 
   return (
     <div className="CreateListingPage" >
       <Box boxShadow={3} className="booking">
         <h2>Edit User Info</h2>
-        <form  onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
+          <DialogContent>
           <TextField
               className={classes.textField}
               id="firstName"
@@ -95,7 +95,7 @@ const ListingForm = (props) => {
               variant="outlined"
               fullWidth
               value={firstName}
-              // onChange={}
+              onChange={e => setFirstName(e.target.value)}
           />
           <TextField
               className={classes.textField}
@@ -105,7 +105,7 @@ const ListingForm = (props) => {
               variant="outlined"
               fullWidth
               value={lastName}
-              // onChange={}
+              onChange={e => setLastName(e.target.value)}
           />
           <TextField
               className={classes.textField}
@@ -116,7 +116,7 @@ const ListingForm = (props) => {
               variant="outlined"
               fullWidth
               value={password}
-              // onChange={}
+              onChange={e => setPassword(e.target.value)}
           />
           <TextField
               className={classes.textField}
@@ -126,8 +126,9 @@ const ListingForm = (props) => {
               variant="outlined"
               fullWidth
               value={phoneNumber}
-              // onChange={}
+              onChange={e => setPhoneNumber(e.target.value)}
           />
+        </DialogContent>
           <Button type="submit" variant="contained" color="secondary" className={classes.submitButton} fullWidth>
             Confirm Change User Info
           </Button>
