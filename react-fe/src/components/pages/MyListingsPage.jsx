@@ -9,9 +9,11 @@ import { Grid, Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ListingForm from '../organisms/ListingForm';
+import BookingsTable from '../organisms/BookingsTable';
 
 const useStyles = makeStyles({
   header_text: {
@@ -27,6 +29,7 @@ const MyListingsPage = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [authUserHeaders, setAuthUserHeaders] = useState(null);
   const [activeEdit, setActiveEdit] = useState("");
+  const [activeBookings, setActiveBookings] = useState("");
   const [loading, setLoading] = useState(true);
 
   const fetchListings = () => {
@@ -104,7 +107,7 @@ const MyListingsPage = (props) => {
   for (const listing of respListings) {
     listings.push(
       <Grid item key={listing.listingId}>
-        <Grid container direction="column">
+        <Grid container direction="column" alignItems='center'>
           <Grid container direction="row" alignItems='center' justify='center'>
             <Grid item>
               <ParkSpotListingCard
@@ -115,6 +118,18 @@ const MyListingsPage = (props) => {
                 dayPrice={listing.dayPrice}
                 listingId={listing.listingId}
               />
+            </Grid>
+            <Grid item>
+              <Button onClick={() => {
+                if (activeBookings === listing.listingId) {
+                  setActiveBookings("");
+                } else {
+                  setActiveBookings(listing.listingId);
+                }
+              }
+              }>
+                <LibraryBooksIcon />
+              </Button>
             </Grid>
             <Grid item>
               <Button onClick={() => {
@@ -149,9 +164,15 @@ const MyListingsPage = (props) => {
                 locn={listing.location}
                 imgUrl={listing.imgUrl}
                 dRate={listing.dayPrice}
+                descr={listing.description}
                 instr={listing.instructions}
                 parkingSize={listing.size}
                 parkingType={listing.type} />
+            </Grid> : null
+          }
+          {activeBookings === listing.listingId ?
+            <Grid item>
+              <BookingsTable bookingId={listing.listingId} />
             </Grid> : null
           }
         </Grid>

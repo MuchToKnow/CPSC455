@@ -47,9 +47,9 @@ const ParkSpotListingCard = (props) => {
 
   return (
     <Link to={{
-      pathname: '/listing-page-example/' + listingId
+      pathname: '/listing-page/' + listingId
     }}>
-      <ButtonBase id='link' href={"/listing-page-example/" + listingId}>
+      <ButtonBase id='link' href={"/listing-page/" + listingId}>
         <Paper>
           <Grid container direction="row" justify="space-evenly" alignItems="center" className={classes.grid}>
             <Grid item>

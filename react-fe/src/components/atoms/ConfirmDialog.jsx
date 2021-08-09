@@ -47,7 +47,7 @@ export default function AlertDialog(props) {
         <DialogActions>
           {inProgress ? <CircularProgress color="secondary" /> :
             <ButtonGroup>
-              <Button onClick={handleClose} color="tertiary">
+              <Button onClick={handleClose}>
                 {actionNegative}
               </Button>
               <Button onClick={handleConfirm} variant="contained" color="secondary" autoFocus disableElevation>

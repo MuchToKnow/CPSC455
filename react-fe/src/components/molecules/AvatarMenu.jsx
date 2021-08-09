@@ -22,6 +22,18 @@ const AvatarMenu = (props) => {
     window.location.href = "/createListing";
   };
 
+  const redirectToEditInfo = () => {
+    window.location.href = "/editUserInfo";
+  };
+
+  const redirectToMyBookings = () => {
+    window.location.href = "/mybookings";
+  };
+
+  const redirectToSupport = () => {
+    window.location.href = "/support";
+  };
+
   const handleClose = () => {
     setShown(false);
   };
@@ -37,9 +49,12 @@ const AvatarMenu = (props) => {
         transformOrigin={{ vertical: "top", horizontal: "center" }}
         anchorEl={anchorEl}
         getContentAnchorEl={null}>
+        <MenuItem onClick={redirectToEditInfo}>Edit Info</MenuItem>
         <MenuItem onClick={redirectToCreateListing}>Create Listing</MenuItem>
         <MenuItem onClick={redirectToMyListings}>My Listings</MenuItem>
         <MenuItem onClick={redirectToMyReviews}>My Reviews</MenuItem>
+        <MenuItem onClick={redirectToMyBookings}>My Bookings</MenuItem>
+        <MenuItem onClick={redirectToSupport}>Support</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
       {/*<CreateListingPage open={createListingOpen} setOpen={setCreateListingOpen} />*/}
