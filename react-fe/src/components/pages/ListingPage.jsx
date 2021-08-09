@@ -16,7 +16,6 @@ import {
     MenuItem,
     Paper,
     Divider,
-    IconButton
 } from "@material-ui/core";
 import DateFnsUtils from '@date-io/date-fns';
 import Rating from '@material-ui/lab/Rating';
@@ -29,7 +28,6 @@ import config from "../../config";
 import { Constants } from "../Constants";
 import { withFirebase } from '../Firebase';
 import PropTypes from "prop-types";
-import DeleteIcon from "@material-ui/icons/Delete";
 
 function ListingPage(props) {
     const useStyles = makeStyles((theme) => ({
@@ -52,7 +50,7 @@ function ListingPage(props) {
         paper: {
             padding: theme.spacing(2),
             margin: 'auto',
-            maxWidth: 500,
+            width: 500,
         }
     }));
 
@@ -73,8 +71,8 @@ function ListingPage(props) {
     const [reviewsList, setReviewsList] = React.useState([]);
     const [reviewsEntries, setReviewsEntries] = React.useState([]);
     const [reviewsAvg, setReviewsAvg] = React.useState(null);
+    const [overallRating, setOverallRating] = React.useState(null);
     const [authUserHeaders, setAuthUserHeaders] = useState(null);
-    const [listingObj, setListingObj] = useState(null);
     const url = config.api.url;
     const { listingId } = useParams();
 
@@ -91,33 +89,8 @@ function ListingPage(props) {
         setRatingComment(event.target.value);
     };
 
-    const handleSubmitRating = () => {
-        let newReview = {
-            rating: rating,
-            comment: ratingComment,
-            user: authUserHeaders,
-        };
-        let listing = {
-            creatorUserId: listingObj.creatorUserId,
-            email: listingObj.email,
-            listingId: listingObj.listingId,
-            imgUrl: listingObj.imgUrl,
-            size: listingObj.size,
-            location: listingObj.location,
-            numberAvail: listingObj.numberAvail,
-            dayPrice: listingObj.dayPrice,
-            reviews: [...listingObj.reviews, newReview],
-        }
-        axios.patch(url + "/listings/" + listingId, listing).then((resp) => {
-            alert("Successfully updated listing");
-            setListingObj(listing);
-            setReviewsList([...listingObj.reviews, newReview]);
-        }).catch(e => console.log(e))
-    };
-
     const responseToListing = (resp) => {
         console.log(resp);
-        setListingObj(resp);
         setImgUrl(resp.imgUrl);
         setSize(resp.size);
         setLocation(resp.location);
@@ -126,12 +99,19 @@ function ListingPage(props) {
         setDescription(resp.description);
         setMinDate(new Date(resp.startDate));
         setMaxDate(new Date(resp.endDate));
-        setReviewsList(resp.reviews);
-        getFirstNameLastName();
+        setOverallRating(resp.overallRating);
+    };
+
+    const responseToReview = (resp) => {
+        setReviewsList(resp);
     };
 
     useEffect(() => {
         axios.get(url + "/listings/single/" + listingId).then((resp) => responseToListing(resp.data)).catch(e => console.log(e));
+    }, [url, listingId]);
+
+    useEffect(() => {
+        axios.get(url + "/reviews/byListing/" + listingId).then((resp) => responseToReview(resp.data)).catch(e => console.log(e));
     }, [url, listingId]);
 
     const setAuthHeaders = () => {
@@ -143,6 +123,20 @@ function ListingPage(props) {
     };
 
     useEffect(setAuthHeaders, []);
+
+    const onSubmitRating = () => {
+        axios.post(url + "/reviews", {
+            rating: rating,
+            comment: ratingComment,
+            listingId
+        }, authUserHeaders).then(() => {
+            alert("Review created successfully");
+        }).then(() => {
+            axios.get(url + "/reviews/byListing/" + listingId).then((resp) => responseToReview(resp.data)).catch(e => console.log(e));
+        }).catch((err) => {
+            alert("Server error - failed to create review: " + err);
+        });
+    };
 
     const onReserve = () => {
         axios.post(url + "/bookings", {
@@ -164,14 +158,6 @@ function ListingPage(props) {
         );
     }
 
-    const getFirstNameLastName = () => {
-        props.firebase.getUserByEmail("sTM0hnJy7GdFoBnCHBcy34yupz43")
-            .then((user) => {console.log(user.toJSON())})
-            .catch((error) => {
-                console.log('Error fetching user data:', error);
-            });
-    };
-
     useEffect(() => {
         const allReviews = reviewsList;
         const reviewArr = [];
@@ -184,9 +170,6 @@ function ListingPage(props) {
                         <Grid item xs container direction="column" spacing={2}>
                             <Grid item xs>
                                 <Rating name="read-only" value={review.rating} readOnly />
-                                <IconButton aria-label="delete" style={{position: "relative", top: -8,}}>
-                                    <DeleteIcon fontSize="small" />
-                                </IconButton>
                                 <Typography variant="body2" gutterBottom>
                                     {review.comment}
                                 </Typography>
@@ -203,6 +186,19 @@ function ListingPage(props) {
         setReviewsEntries(reviewArr);
         setReviewsAvg(avg);
     }, [reviewsList]);
+
+    useEffect(() => {
+        axios.get(url + "/listings/single/" + listingId)
+            .then((resp) => {
+                console.log(resp.data);
+                console.log(overallRating);
+                resp.data[overallRating] = overallRating;
+                axios.patch(url + "/listings/" + listingId, resp.data)
+                    .then(() => console.log("Successfully updated overall rating"))
+                    .catch(e => console.log(e));
+            })
+            .catch(e => console.log(e));
+    }, [overallRating]);
 
     return (
         <div>
@@ -303,13 +299,13 @@ function ListingPage(props) {
                                 value={ratingComment}
                                 onChange={handleRatingCommentChange}
                                 variant="outlined"
-                                style={{marginLeft: 20, marginTop: -20, marginBottom: 10}}
+                                style={{marginLeft: 20, marginTop: -20, marginBottom: 10, width: 300}}
                             />
                             <Button
                                 variant="contained" color="secondary"
                                 style={{marginLeft: 20, padding: 0, paddingTop: 5, paddingBottom: 5, display: "block"}}
                                 className={classes.ratingSubmitButton}
-                                onClick={handleSubmitRating}
+                                onClick={onSubmitRating}
                             >
                                 Submit
                             </Button>

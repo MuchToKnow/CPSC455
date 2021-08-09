@@ -10,6 +10,10 @@ const AvatarMenu = (props) => {
     window.location.href = "/";
   };
 
+  const redirectToMyReviews = () => {
+    window.location.href = "/myReviews";
+  };
+
   const redirectToMyListings = () => {
     window.location.href = "/myListings";
   };
@@ -35,6 +39,7 @@ const AvatarMenu = (props) => {
         getContentAnchorEl={null}>
         <MenuItem onClick={redirectToCreateListing}>Create Listing</MenuItem>
         <MenuItem onClick={redirectToMyListings}>My Listings</MenuItem>
+        <MenuItem onClick={redirectToMyReviews}>My Reviews</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
       {/*<CreateListingPage open={createListingOpen} setOpen={setCreateListingOpen} />*/}

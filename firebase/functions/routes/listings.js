@@ -100,10 +100,7 @@ router.post('/', authMiddleware, (req, res, next) => {
   const listingObj = {
     creatorUserId: req.user.uid,
     email: req.user.email,
-    firstName: req.user.firstName,
-    lastName: req.user.lastName,
     listingId: uuid(),
-    reviews: [],
     ...req.body
   };
   db.getInstance(async (db) => {
@@ -179,7 +176,7 @@ router.put('/:listingId', authMiddleware, (req, res, next) => {
   });
 });
 
-/* PATCH update reviews for single listing. */
+/* PATCH update fields for single listing. */
 router.patch('/:listingId', (req, res, next) => {
   db.getInstance(async (db) => {
     const updateDoc = {
@@ -195,5 +192,6 @@ router.patch('/:listingId', (req, res, next) => {
     }
   });
 });
+
 
 module.exports = router;
