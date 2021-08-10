@@ -89,9 +89,9 @@ const MyReviewsPage = (props) => {
           <Grid container direction="row" alignItems='center' justify='center'>
             <Grid item>
               <Link to={{
-                pathname: '/listing-page-example/' + review.listingId
+                pathname: '/listing-page/' + review.listingId
               }}>
-                <ButtonBase id='link' href={"/listing-page-example/" + review.listingId}>
+                <ButtonBase id='link' href={"/listing-page/" + review.listingId}>
                   <Paper>
                     <Grid container direction="column" justify="space-evenly" alignItems="center"  className={classes.grid}>
                       <Rating name="read-only" value={review.rating} style={{position: "relative", top: 5, paddingTop: 20, paddingBottom: 20}} readOnly />

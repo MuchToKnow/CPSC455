@@ -52,8 +52,8 @@ const AvatarMenu = (props) => {
         <MenuItem onClick={redirectToEditInfo}>Edit Info</MenuItem>
         <MenuItem onClick={redirectToCreateListing}>Create Listing</MenuItem>
         <MenuItem onClick={redirectToMyListings}>My Listings</MenuItem>
-        <MenuItem onClick={redirectToMyReviews}>My Reviews</MenuItem>
         <MenuItem onClick={redirectToMyBookings}>My Bookings</MenuItem>
+        <MenuItem onClick={redirectToMyReviews}>My Reviews</MenuItem>
         <MenuItem onClick={redirectToSupport}>Support</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
