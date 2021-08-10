@@ -52,3 +52,14 @@ img {
     float: left;
     margin-right: 20px;
 }
+
+.supportPage {
+    text-align: center;
+    padding-top: 200px;
+    padding-left: 40%;
+    padding-right: 15%;
+}
+
+.supportInfo {
+    text-align: left;
+}
