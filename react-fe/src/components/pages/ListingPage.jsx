@@ -71,7 +71,6 @@ function ListingPage(props) {
     const [reviewsList, setReviewsList] = React.useState([]);
     const [reviewsEntries, setReviewsEntries] = React.useState([]);
     const [reviewsAvg, setReviewsAvg] = React.useState(null);
-    const [overallRating, setOverallRating] = React.useState(null);
     const [authUserHeaders, setAuthUserHeaders] = useState(null);
     const url = config.api.url;
     const { listingId } = useParams();
@@ -99,7 +98,6 @@ function ListingPage(props) {
         setDescription(resp.description);
         setMinDate(new Date(resp.startDate));
         setMaxDate(new Date(resp.endDate));
-        setOverallRating(resp.overallRating);
     };
 
     const responseToReview = (resp) => {
@@ -186,19 +184,6 @@ function ListingPage(props) {
         setReviewsEntries(reviewArr);
         setReviewsAvg(avg);
     }, [reviewsList]);
-
-    useEffect(() => {
-        axios.get(url + "/listings/single/" + listingId)
-            .then((resp) => {
-                console.log(resp.data);
-                console.log(overallRating);
-                resp.data[overallRating] = overallRating;
-                axios.patch(url + "/listings/" + listingId, resp.data)
-                    .then(() => console.log("Successfully updated overall rating"))
-                    .catch(e => console.log(e));
-            })
-            .catch(e => console.log(e));
-    }, [overallRating]);
 
     return (
         <div>

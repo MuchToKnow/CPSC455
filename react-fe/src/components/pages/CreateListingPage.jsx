@@ -31,7 +31,6 @@ const CreateListingPage = (props) => {
             description,
             instructions,
             type,
-            overallRating: null
         }, authUserHeaders).then(() => {
             alert("Successfully Created Listing");
         }).catch(err => {
