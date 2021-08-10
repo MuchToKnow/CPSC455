@@ -1,8 +1,7 @@
 import Header from '../organisms/Header';
 import ParkSpotListingCard from '../molecules/ParkSpotListingCard';
 import { withFirebase } from '../Firebase';
-import { useEffect, useState } from 'react';
-import ReactMapGL from "react-map-gl";
+import React, { useEffect, useRef, useState } from 'react';
 import config from '../../config';
 import axios from 'axios';
 import { Grid, Typography } from '@material-ui/core';
@@ -21,26 +20,20 @@ const useStyles = makeStyles({
 });
 
 const MainApp = () => {
-  let MAPBOX_TOKEN = "pk.eyJ1IjoiZGF2aWR3NyIsImEiOiJja3Jwc3RpdGQ4cjUyMm9tbjh6MmU2YzN6In0.rKQNwIwSGSGjw_u8UHM5XQ";
-
+  const mapContainerRef = useRef(null);
   const classes = useStyles();
   const url = config.api.url;
   const [listings, setListings] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
-  const [selectedParkSpot, setSelectedParkSpot] = useState(null);
-  const [viewport, setViewport] = useState({
-    latitude: 49.269520,
-    longitude: -123.251240,
-    width: '100vw',
-    height: '100vh',
-    zoom: 10
-  });
+  const [lng, setLng] = useState(-123.251240);
+  const [lat, setLat] = useState(49.269520);
+  const [zoom, setZoom] = useState(8);
 
   mapboxgl.accessToken = "pk.eyJ1IjoiZGF2aWR3NyIsImEiOiJja3Jwc3RpdGQ4cjUyMm9tbjh6MmU2YzN6In0.rKQNwIwSGSGjw_u8UHM5XQ";
+  const mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
 
-  const createMarkerForListing = (listing) => {
-    let mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+  const createMarkerForListing = (listing, map) => {
     mapboxClient
       .forwardGeocode({
         query: String(listing.location),
@@ -48,25 +41,21 @@ const MainApp = () => {
         limit: 1
       })
       .send()
-      .then(function (response) {
+      .then((response) => {
         if (
-          response &&
-          response.body &&
-          response.body.features &&
-          response.body.features.length
+          !response ||
+          !response.body ||
+          !response.body.features ||
+          !response.body.features.length
         ) {
-          var feature = response.body.features[0];
-
-          var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: feature.center,
-            zoom: 10
-          });
-
-          // Create a marker and add it to the map.
-          new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+          console.error('Invalid response:');
+          console.error(response);
+          return;
         }
+        const feature = response.body.features[0];
+
+        // Create a marker and add it to the map.
+        new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
       });
   }
 
@@ -89,7 +78,6 @@ const MainApp = () => {
     setListings(newListings);
     setLoading(false);
   };
-
 
   useEffect(() => {
     axios.get(url + "/listings/").then((resp) => {
@@ -116,6 +104,31 @@ const MainApp = () => {
     }
   }, [searchTerm, url]);
 
+  useEffect(() => {
+    const map = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [lng, lat],
+      zoom: zoom,
+    });
+
+    listings.map((listing) => {
+      createMarkerForListing(listing, map);
+    });
+
+    map.addControl(new mapboxgl.NavigationControl(), 'top-right')
+
+    map.on('move', () => {
+      setLng(map.getCenter().lng.toFixed(4));
+      setLat(map.getCenter().lat.toFixed(4));
+      setZoom(map.getZoom().toFixed(2));
+    });
+
+    // Clean up on unmount
+    return () => map.remove();
+
+  }, []);
+
   return (
     <div className="App">
       <Header onSearchChange={setSearchTerm} />
@@ -132,14 +145,9 @@ const MainApp = () => {
           : null}
         {listings}
       </Grid>
-      <div id="map"></div>
-      <ReactMapGL
-        {...viewport}
-        mapboxApiAccessToken={MAPBOX_TOKEN}
-        onViewportChange={(viewport) => setViewport(viewport)}
-      >
-        {listings.map(createMarkerForListing)}
-      </ReactMapGL>
+      <div>
+        <div className="map-container" ref={mapContainerRef} />
+      </div>
     </div>
   );
 };
