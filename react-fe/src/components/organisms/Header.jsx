@@ -14,11 +14,11 @@ function Header(props) {
     return (
         <Box className='header' bgcolor="primary.main">
             <a className="img_logo_icon" href="/app"><img className="img_logo_icon" src={logo} alt="Logo" /></a>
-            <Box className='header_center' bgcolor="primary.light">
-                <InputBase className='input_text' onChange={onChange} />
-                <SearchIcon />
-            </Box>
-
+            {props.onSearchChange ?
+                <Box className='header_center' bgcolor="primary.light">
+                    <InputBase className='input_text' onChange={onChange} />
+                    <SearchIcon />
+                </Box> : null}
             <Box className='header_right'>
                 <AvatarButton />
             </Box>

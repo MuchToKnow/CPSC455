@@ -38,7 +38,7 @@ const BookingsTable = (props) => {
     }
   };
 
-  useEffect(setAuthHeaders, []);
+  useEffect(setAuthHeaders, [props.firebase, setAuthHeaders]);
 
   useEffect(() => {
     if (authUserHeaders) {
@@ -49,7 +49,7 @@ const BookingsTable = (props) => {
         setLoading(false);
       });
     }
-  }, [authUserHeaders]);
+  }, [authUserHeaders, props.bookingId, url]);
 
   const rows = [];
   for (const row of bookings) {

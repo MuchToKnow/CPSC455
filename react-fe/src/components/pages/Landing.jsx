@@ -55,7 +55,7 @@ function Landing() {
     });
     return (
         <div className="backgroundColor">
-            <Box className='banner_container' bgcolor="tertiary">
+            <Box className='banner_container'>
                 <Box className='banner_info'>
                     <img className="landing_icon" src={logo} alt="Logo" />
                     <Typography variant="h3" className="banner_text">Park <span ref={el} /></Typography>
