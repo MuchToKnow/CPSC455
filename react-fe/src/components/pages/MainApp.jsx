@@ -1,8 +1,7 @@
 import Header from '../organisms/Header';
 import ParkSpotListingCard from '../molecules/ParkSpotListingCard';
 import { withFirebase } from '../Firebase';
-import { useEffect, useState } from 'react';
-import ReactMapGL from "react-map-gl";
+import React, { useEffect, useRef, useState } from 'react';
 import config from '../../config';
 import axios from 'axios';
 import { Grid, Typography } from '@material-ui/core';
@@ -10,6 +9,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Geocode from "react-geocode";
+import mapboxgl from "mapbox-gl";
+import mapboxSdk from "@mapbox/mapbox-sdk/services/geocoding";
 
 const useStyles = makeStyles({
   header_text: {
@@ -19,54 +20,49 @@ const useStyles = makeStyles({
 });
 
 const MainApp = () => {
-  let MAPBOX_TOKEN = "pk.eyJ1IjoiZGF2aWR3NyIsImEiOiJja3Jwc3RpdGQ4cjUyMm9tbjh6MmU2YzN6In0.rKQNwIwSGSGjw_u8UHM5XQ";
-
+  const mapContainerRef = useRef(null);
+  const map = useRef(null);
   const classes = useStyles();
   const url = config.api.url;
   const [listings, setListings] = useState([]);
+  const [listingElements, setListingElements] = useState([]);
+  const [locations, setLocations] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
-  const [selectedParkSpot, setSelectedParkSpot] = useState(null);
-  const [viewport, setViewport] = useState({
-    latitude: 49.269520,
-    longitude: -123.251240,
-    width: '100vw',
-    height: '100vh',
-    zoom: 10
+  const [lng, setLng] = useState(-123.251240);
+  const [lat, setLat] = useState(49.269520);
+  const [zoom, setZoom] = useState(8);
+  const marker = new mapboxgl.Marker();
+
+  mapboxgl.accessToken = "pk.eyJ1IjoiZGF2aWR3NyIsImEiOiJja3Jwc3RpdGQ4cjUyMm9tbjh6MmU2YzN6In0.rKQNwIwSGSGjw_u8UHM5XQ";
+  const mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+
+  useEffect(() => {
+    if (map.current) return;
+    map.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [lng, lat],
+      zoom: zoom,
+    });
   });
 
-  const getLatLongFromAddress = (address) => {
-    Geocode.fromAddress(address).then(
-      (response) => {
-        const { lat, lng } = response.results[0].geometry.location;
-        return [lat, lng];
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  };
+  useEffect(() => {
+    if (map.current) {
+      map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+      map.current.on('move', () => {
+        setLng(map.current.getCenter().lng.toFixed(4));
+        setLat(map.current.getCenter().lat.toFixed(4));
+        setZoom(map.current.getZoom().toFixed(2));
+      });
+    }
+  }, [map]);
 
   const responseToListings = (resp) => {
-    const newListings = [];
-    for (const listing of resp) {
-      newListings.push(
-        <Grid item key={listing.listingId}>
-          <ParkSpotListingCard
-            listingId={listing.listingId}
-            imgUrl={listing.imgUrl}
-            size={listing.size}
-            location={listing.location}
-            numberAvail={listing.numberAvail}
-            dayPrice={listing.dayPrice}
-          />
-        </Grid>
-      );
-    }
-    setListings(newListings);
+    setListings(resp);
     setLoading(false);
   };
-
 
   useEffect(() => {
     axios.get(url + "/listings/").then((resp) => {
@@ -93,6 +89,81 @@ const MainApp = () => {
     }
   }, [searchTerm, url]);
 
+  useEffect(() => {
+    const promises = [];
+    listings.map((listing) => {
+      console.log({ listing });
+      if (listing.location) {
+        promises.push(mapboxClient
+          .forwardGeocode({
+            query: String(listing.location),
+            autocomplete: false,
+            limit: 1
+          })
+          .send()
+          .then((response) => {
+            response.listingId = listing.listingId;
+            return response;
+          }));
+      }
+    });
+    Promise.all(promises)
+      .then((responses) => {
+        const locationsCopy = JSON.parse(JSON.stringify(locations));
+        responses.forEach((response) => {
+          if (
+            !response ||
+            !response.body ||
+            !response.body.features ||
+            !response.body.features.length ||
+            !response.listingId
+          ) {
+            console.error('Invalid response:');
+            console.error(response);
+            return;
+          }
+          const feature = response.body.features[0];
+          locationsCopy[response.listingId] = feature.center;
+          // // Create a marker and add it to the map.
+          // new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+        });
+        setLocations(locationsCopy);
+      });
+  }, [listings]);
+
+  useEffect(() => {
+    const listingElements = [];
+    for (const listing of listings) {
+      listingElements.push(
+        <Grid
+          item
+          key={listing.listingId}
+          onMouseEnter={() => {
+            console.log("onmouseEnter");
+            console.log({ locations, listingId: listing.listingId, map });
+            if (locations[listing.listingId] && map.current) {
+              marker.setLngLat(locations[listing.listingId]).addTo(map.current);
+            }
+          }}
+          onMouseLeave={() => {
+            console.log("onmouseLeave");
+            marker.remove();
+          }}
+        >
+          <ParkSpotListingCard
+            listingId={listing.listingId}
+            imgUrl={listing.imgUrl}
+            size={listing.size}
+            location={listing.location}
+            numberAvail={listing.numberAvail}
+            dayPrice={listing.dayPrice}
+          />
+        </Grid>
+      );
+    }
+    setListingElements(listingElements);
+  }, [listings, map, locations]);
+
   return (
     <div className="App">
       <Header onSearchChange={setSearchTerm} />
@@ -107,14 +178,11 @@ const MainApp = () => {
             <CircularProgress />
           </Grid>
           : null}
-        {listings}
+        {listingElements}
       </Grid>
-      <ReactMapGL
-        {...viewport}
-        mapboxApiAccessToken={MAPBOX_TOKEN}
-        onViewportChange={(viewport) => setViewport(viewport)}
-      >
-      </ReactMapGL>
+      <div>
+        <div className="map-container" ref={mapContainerRef} />
+      </div>
     </div>
   );
 };

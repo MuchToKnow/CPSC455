@@ -68,7 +68,7 @@ function ListingPage(props) {
     const [carAmount, setCarAmount] = React.useState('');
     const [imgUrl, setImgUrl] = React.useState('');
     const [size, setSize] = React.useState('');
-    const [location, setLocation] = React.useState(null);
+    const [location, setLocation] = React.useState('');
     const [numberAvail, setNumberAvail] = React.useState(null);
     const [dayPrice, setDayPrice] = React.useState(null);
     const [description, setDescription] = useState(null);
