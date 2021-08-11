@@ -101,8 +101,6 @@ router.post('/', authMiddleware, (req, res, next) => {
     creatorUserId: req.user.uid,
     email: req.user.email,
     listingId: uuid(),
-    reviews: {rating: 5, comment: "good parking spot! 10/10", user: req.user.uid},
-    test: "dwadawdaw",
     ...req.body
   };
   db.getInstance(async (db) => {
@@ -177,5 +175,23 @@ router.put('/:listingId', authMiddleware, (req, res, next) => {
     }
   });
 });
+
+/* PATCH update fields for single listing. */
+router.patch('/:listingId', (req, res, next) => {
+  db.getInstance(async (db) => {
+    const updateDoc = {
+      $set: req.body
+    };
+    try {
+      await db.collection('listings').updateOne({ listingId: req.params.listingId }, updateDoc);
+      res.status(200).json("Success");
+      return next();
+    } catch (err) {
+      res.status(400).json({ error: err });
+      return next();
+    }
+  });
+});
+
 
 module.exports = router;

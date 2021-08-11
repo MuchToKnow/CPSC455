@@ -4,7 +4,19 @@ import '../../styling/ListingPage.css';
 import Header from '../organisms/Header';
 import FeatureList from '../organisms/FeatureList';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Box, TextField, Typography, Grid, FormControl, InputLabel, Select, MenuItem, Paper, Divider, List, ListItem, ListItemText} from "@material-ui/core";
+import {
+    Button,
+    Box,
+    TextField,
+    Typography,
+    Grid,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Paper,
+    Divider,
+} from "@material-ui/core";
 import DateFnsUtils from '@date-io/date-fns';
 import Rating from '@material-ui/lab/Rating';
 import {
@@ -38,7 +50,7 @@ function ListingPage(props) {
         paper: {
             padding: theme.spacing(2),
             margin: 'auto',
-            maxWidth: 500,
+            width: 500,
         }
     }));
 
@@ -57,8 +69,9 @@ function ListingPage(props) {
     const [rating, setRating] = React.useState(0);
     const [ratingComment, setRatingComment] = React.useState("");
     const [reviewsList, setReviewsList] = React.useState([]);
+    const [reviewsEntries, setReviewsEntries] = React.useState([]);
+    const [reviewsAvg, setReviewsAvg] = React.useState(null);
     const [authUserHeaders, setAuthUserHeaders] = useState(null);
-    const [listingObj, setListingObj] = useState(null);
     const url = config.api.url;
     const { listingId } = useParams();
 
@@ -75,32 +88,8 @@ function ListingPage(props) {
         setRatingComment(event.target.value);
     };
 
-    const handleSubmitRating = () => {
-        let newReview = {
-            rating: rating,
-            comment: ratingComment,
-            user: authUserHeaders,
-        };
-        let listing = {
-            creatorUserId: listingObj.creatorUserId,
-            email: listingObj.email,
-            listingId: listingObj.listingId,
-            imgUrl: listingObj.imgUrl,
-            size: listingObj.size,
-            location: listingObj.location,
-            numberAvail: listingObj.numberAvail,
-            dayPrice: listingObj.dayPrice,
-            // reviews: listingObj.reviews,
-            reviews: [...listingObj.reviews, newReview],
-        }
-        axios.put(url + "/listings/" + listingId, listing, authUserHeaders).then(() => {
-            alert("Successfully updated listing");
-        }).catch(e => console.log(e))
-    };
-
     const responseToListing = (resp) => {
         console.log(resp);
-        setListingObj(resp);
         setImgUrl(resp.imgUrl);
         setSize(resp.size);
         setLocation(resp.location);
@@ -109,11 +98,18 @@ function ListingPage(props) {
         setDescription(resp.description);
         setMinDate(new Date(resp.startDate));
         setMaxDate(new Date(resp.endDate));
-        setReviewsList([...reviewsList, resp.reviews]);
+    };
+
+    const responseToReview = (resp) => {
+        setReviewsList(resp);
     };
 
     useEffect(() => {
         axios.get(url + "/listings/single/" + listingId).then((resp) => responseToListing(resp.data)).catch(e => console.log(e));
+    }, [url, listingId]);
+
+    useEffect(() => {
+        axios.get(url + "/reviews/byListing/" + listingId).then((resp) => responseToReview(resp.data)).catch(e => console.log(e));
     }, [url, listingId]);
 
     const setAuthHeaders = () => {
@@ -125,6 +121,20 @@ function ListingPage(props) {
     };
 
     useEffect(setAuthHeaders, []);
+
+    const onSubmitRating = () => {
+        axios.post(url + "/reviews", {
+            rating: rating,
+            comment: ratingComment,
+            listingId
+        }, authUserHeaders).then(() => {
+            alert("Review created successfully");
+        }).then(() => {
+            axios.get(url + "/reviews/byListing/" + listingId).then((resp) => responseToReview(resp.data)).catch(e => console.log(e));
+        }).catch((err) => {
+            alert("Server error - failed to create review: " + err);
+        });
+    };
 
     const onReserve = () => {
         axios.post(url + "/bookings", {
@@ -146,16 +156,34 @@ function ListingPage(props) {
         );
     }
 
-    // const allReviews = [];
-    // for (const review of reviewsList) {
-    //     allReviews.push(
-    //         <ListItem alignItems="flex-start">
-    //             <ListItemText
-    //                 primary={review.comment}
-    //             />
-    //         </ListItem>
-    //     );
-    // }
+    useEffect(() => {
+        const allReviews = reviewsList;
+        const reviewArr = [];
+        let avg = 0;
+        let reviewCount = 0;
+        for (const review of allReviews) {
+            reviewArr.push(
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm container>
+                        <Grid item xs container direction="column" spacing={2}>
+                            <Grid item xs>
+                                <Rating name="read-only" value={review.rating} readOnly />
+                                <Typography variant="body2" gutterBottom>
+                                    {review.comment}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            );
+
+            avg += review.rating;
+            reviewCount++;
+        }
+        avg = avg / reviewCount;
+        setReviewsEntries(reviewArr);
+        setReviewsAvg(avg);
+    }, [reviewsList]);
 
     return (
         <div>
@@ -223,54 +251,18 @@ function ListingPage(props) {
                     <div className="reviewsAndSubmitReview">
                         <div className="userReviews">
                             <Paper className={classes.paper}>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={12} sm container>
-                                        <Grid item xs container direction="column" spacing={2}>
-                                            <Grid item xs>
-                                                <Rating name="read-only" value={5} readOnly />
-                                                <Typography variant="body2" gutterBottom>
-                                                    Good parking spot! 10/10
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={12} sm container>
-                                        <Grid item xs container direction="column" spacing={2}>
-                                            <Grid item xs>
-                                                <Rating name="read-only" value={5} readOnly />
-                                                <Typography variant="body2" gutterBottom>
-                                                    Excellent place
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={12} sm container>
-                                        <Grid item xs container direction="column" spacing={2}>
-                                            <Grid item xs>
-                                                <Rating name="read-only" value={4} readOnly />
-                                                <Typography variant="body2" gutterBottom>
-                                                    easy access, nice owners!
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={12} sm container>
-                                        <Grid item xs container direction="column" spacing={2}>
-                                            <Grid item xs>
-                                                <Rating name="read-only" value={1} readOnly />
-                                                <Typography variant="body2" gutterBottom>
-                                                    someone broke into my car
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
+                                <Typography variant="body1" gutterBottom>
+                                    Overall Rating: <Rating name="read-only" precision={0.1} value={reviewsAvg} style={{position: "relative", top: 5}} readOnly />
+                                </Typography>
+                                <Divider style={{marginTop: 20, marginBottom: 20}}/>
+                                {reviewsEntries.length === 0 ?
+                                    <Typography variant="body2" gutterBottom>
+                                        No ratings yet
+                                    </Typography> :
+                                    <div>
+                                        {reviewsEntries}
+                                    </div>
+                                }
                             </Paper>
                         </div>
                         <div className="reviewBox">
@@ -292,32 +284,17 @@ function ListingPage(props) {
                                 value={ratingComment}
                                 onChange={handleRatingCommentChange}
                                 variant="outlined"
-                                style={{marginLeft: 20, marginTop: -20, marginBottom: 10}}
+                                style={{marginLeft: 20, marginTop: -20, marginBottom: 10, width: 300}}
                             />
                             <Button
                                 variant="contained" color="secondary"
                                 style={{marginLeft: 20, padding: 0, paddingTop: 5, paddingBottom: 5, display: "block"}}
                                 className={classes.ratingSubmitButton}
-                                onClick={handleSubmitRating}
+                                onClick={onSubmitRating}
                             >
                                 Submit
                             </Button>
                         </div>
-                        {/*<List className={classes.reviewsForThisListing}>*/}
-                        {/*    <ListItem alignItems="flex-start">*/}
-                        {/*        <Rating name="read-only" value={5} readOnly />*/}
-                        {/*        <ListItemText*/}
-                        {/*            primary="Good parking spot! 10/10"*/}
-                        {/*        />*/}
-                        {/*    </ListItem>*/}
-                        {/*    <Divider variant="inset" component="li" />*/}
-                        {/*    <ListItem alignItems="flex-start">*/}
-                        {/*        <Rating name="read-only" value={4.5} readOnly />*/}
-                        {/*        <ListItemText*/}
-                        {/*            primary="Good experience"*/}
-                        {/*        />*/}
-                        {/*    </ListItem>*/}
-                        {/*</List>*/}
                     </div>
                 </div>
             </div>

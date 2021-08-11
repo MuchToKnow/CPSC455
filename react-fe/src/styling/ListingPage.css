@@ -38,8 +38,8 @@ img {
 }
 
 .reviewBox{
-    float: right;
-    margin-left: 20px;
+    float: left;
+
 }
 
 .reviewsAndSubmitReview {
@@ -50,6 +50,7 @@ img {
 .userReviews{
     display: block;
     float: left;
+    margin-right: 20px;
 }
 
 .supportPage {

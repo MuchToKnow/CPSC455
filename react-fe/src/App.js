@@ -4,6 +4,7 @@ import Landing from './components/pages/Landing';
 import MainApp from './components/pages/MainApp';
 import ListingPage from './components/pages/ListingPage';
 import MyListingsPage from './components/pages/MyListingsPage';
+import MyReviewsPage from './components/pages/MyReviewsPage';
 import CreateListingPage from "./components/pages/CreateListingPage";
 import EditUserInfoPage from "./components/pages/EditUserInfoPage";
 import MyBookingsTable from './components/pages/MyBookingsPage';
@@ -21,6 +22,9 @@ function App() {
         </Route>
         <Route exact path="/myListings">
           <MyListingsPage />
+        </Route>
+        <Route exact path="/myReviews">
+          <MyReviewsPage />
         </Route>
         <Route exact path="/myBookings">
           <MyBookingsTable />
