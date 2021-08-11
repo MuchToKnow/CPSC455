@@ -16,6 +16,9 @@ const useStyles = makeStyles({
   header_text: {
     marginTop: '10px',
     marginBottom: '10px'
+  },
+  listingsElements: {
+    width: "40%",
   }
 });
 
@@ -168,20 +171,23 @@ const MainApp = () => {
     <div className="App">
       <Header onSearchChange={setSearchTerm} />
       <Typography variant="h4" className={classes.header_text}><DriveEtaIcon color="secondary" fontSize="large" /> Available Parking Spaces <DriveEtaIcon color="secondary" fontSize="large" /></Typography>
-      <Grid
-        container
-        direction="column"
-        spacing={2}
-      >
-        {loading ?
-          <Grid item>
-            <CircularProgress />
-          </Grid>
-          : null}
-        {listingElements}
-      </Grid>
-      <div>
-        <div className="map-container" ref={mapContainerRef} />
+      <div className="ListingsAndMap">
+        <Grid
+          className={classes.listingsElements}
+          container
+          direction="column"
+          spacing={2}
+        >
+          {loading ?
+            <Grid item>
+              <CircularProgress />
+            </Grid>
+            : null}
+          {listingElements}
+        </Grid>
+        <div className="map-div">
+          <div className="map-container" ref={mapContainerRef} />
+        </div>
       </div>
     </div>
   );

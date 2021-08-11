@@ -12,6 +12,20 @@ code {
     monospace;
 }
 
+.ListingsAndMap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.map-div {
+  width: 60%;
+  height: 83%;
+  position: fixed;
+  left: 40%;
+}
+
 .map-container {
-height: 400px;
+  height: 100%;
+  width: 100%;
+  position: fixed;
 }
