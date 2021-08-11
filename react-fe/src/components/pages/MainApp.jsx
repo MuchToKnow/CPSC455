@@ -21,61 +21,46 @@ const useStyles = makeStyles({
 
 const MainApp = () => {
   const mapContainerRef = useRef(null);
+  const map = useRef(null);
   const classes = useStyles();
   const url = config.api.url;
   const [listings, setListings] = useState([]);
+  const [listingElements, setListingElements] = useState([]);
+  const [locations, setLocations] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [lng, setLng] = useState(-123.251240);
   const [lat, setLat] = useState(49.269520);
   const [zoom, setZoom] = useState(8);
+  const marker = new mapboxgl.Marker();
 
   mapboxgl.accessToken = "pk.eyJ1IjoiZGF2aWR3NyIsImEiOiJja3Jwc3RpdGQ4cjUyMm9tbjh6MmU2YzN6In0.rKQNwIwSGSGjw_u8UHM5XQ";
   const mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
 
-  const createMarkerForListing = (listing, map) => {
-    mapboxClient
-      .forwardGeocode({
-        query: String(listing.location),
-        autocomplete: false,
-        limit: 1
-      })
-      .send()
-      .then((response) => {
-        if (
-          !response ||
-          !response.body ||
-          !response.body.features ||
-          !response.body.features.length
-        ) {
-          console.error('Invalid response:');
-          console.error(response);
-          return;
-        }
-        const feature = response.body.features[0];
+  useEffect(() => {
+    if (map.current) return;
+    map.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [lng, lat],
+      zoom: zoom,
+    });
+  });
 
-        // Create a marker and add it to the map.
-        new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+  useEffect(() => {
+    if (map.current) {
+      map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+      map.current.on('move', () => {
+        setLng(map.current.getCenter().lng.toFixed(4));
+        setLat(map.current.getCenter().lat.toFixed(4));
+        setZoom(map.current.getZoom().toFixed(2));
       });
-  };
+    }
+  }, [map]);
 
   const responseToListings = (resp) => {
-    const newListings = [];
-    for (const listing of resp) {
-      newListings.push(
-        <Grid item key={listing.listingId}>
-          <ParkSpotListingCard
-            listingId={listing.listingId}
-            imgUrl={listing.imgUrl}
-            size={listing.size}
-            location={listing.location}
-            numberAvail={listing.numberAvail}
-            dayPrice={listing.dayPrice}
-          />
-        </Grid>
-      );
-    }
-    setListings(newListings);
+    setListings(resp);
     setLoading(false);
   };
 
@@ -105,29 +90,79 @@ const MainApp = () => {
   }, [searchTerm, url]);
 
   useEffect(() => {
-    const map = new mapboxgl.Map({
-      container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [lng, lat],
-      zoom: zoom,
-    });
-
+    const promises = [];
     listings.map((listing) => {
-      createMarkerForListing(listing, map);
+      console.log({ listing });
+      if (listing.location) {
+        promises.push(mapboxClient
+          .forwardGeocode({
+            query: String(listing.location),
+            autocomplete: false,
+            limit: 1
+          })
+          .send()
+          .then((response) => {
+            response.listingId = listing.listingId;
+            return response;
+          }));
+      }
     });
+    Promise.all(promises)
+      .then((responses) => {
+        const locationsCopy = JSON.parse(JSON.stringify(locations));
+        responses.forEach((response) => {
+          if (
+            !response ||
+            !response.body ||
+            !response.body.features ||
+            !response.body.features.length ||
+            !response.listingId
+          ) {
+            console.error('Invalid response:');
+            console.error(response);
+            return;
+          }
+          const feature = response.body.features[0];
+          locationsCopy[response.listingId] = feature.center;
+          // // Create a marker and add it to the map.
+          // new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+        });
+        setLocations(locationsCopy);
+      });
+  }, [listings]);
 
-    map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
-    map.on('move', () => {
-      setLng(map.getCenter().lng.toFixed(4));
-      setLat(map.getCenter().lat.toFixed(4));
-      setZoom(map.getZoom().toFixed(2));
-    });
-
-    // Clean up on unmount
-    return () => map.remove();
-
-  }, []);
+  useEffect(() => {
+    const listingElements = [];
+    for (const listing of listings) {
+      listingElements.push(
+        <Grid
+          item
+          key={listing.listingId}
+          onMouseEnter={() => {
+            console.log("onmouseEnter");
+            console.log({ locations, listingId: listing.listingId, map });
+            if (locations[listing.listingId] && map.current) {
+              marker.setLngLat(locations[listing.listingId]).addTo(map.current);
+            }
+          }}
+          onMouseLeave={() => {
+            console.log("onmouseLeave");
+            marker.remove();
+          }}
+        >
+          <ParkSpotListingCard
+            listingId={listing.listingId}
+            imgUrl={listing.imgUrl}
+            size={listing.size}
+            location={listing.location}
+            numberAvail={listing.numberAvail}
+            dayPrice={listing.dayPrice}
+          />
+        </Grid>
+      );
+    }
+    setListingElements(listingElements);
+  }, [listings, map, locations]);
 
   return (
     <div className="App">
@@ -143,7 +178,7 @@ const MainApp = () => {
             <CircularProgress />
           </Grid>
           : null}
-        {listings}
+        {listingElements}
       </Grid>
       <div>
         <div className="map-container" ref={mapContainerRef} />
