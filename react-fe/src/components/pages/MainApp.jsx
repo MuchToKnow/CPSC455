@@ -8,14 +8,13 @@ import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Geocode from "react-geocode";
 import mapboxgl from "mapbox-gl";
 import mapboxSdk from "@mapbox/mapbox-sdk/services/geocoding";
 
 const useStyles = makeStyles({
   header_text: {
-    marginTop: '10px',
-    marginBottom: '10px'
+    marginTop: '20px',
+    marginBottom: '10px',
   },
   listingsElements: {
     width: "40%",
@@ -170,7 +169,6 @@ const MainApp = () => {
   return (
     <div className="App">
       <Header onSearchChange={setSearchTerm} />
-      <Typography variant="h4" className={classes.header_text}><DriveEtaIcon color="secondary" fontSize="large" /> Available Parking Spaces <DriveEtaIcon color="secondary" fontSize="large" /></Typography>
       <div className="ListingsAndMap">
         <Grid
           className={classes.listingsElements}
@@ -178,6 +176,7 @@ const MainApp = () => {
           direction="column"
           spacing={2}
         >
+          <Typography variant="h4" className={classes.header_text}><DriveEtaIcon color="secondary" fontSize="large" /> Available Parking Spaces <DriveEtaIcon color="secondary" fontSize="large" /></Typography>
           {loading ?
             <Grid item>
               <CircularProgress />
