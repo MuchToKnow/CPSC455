@@ -21,7 +21,8 @@ class Firebase {
           authUser.getIdToken().then((token) => {
             this.authUserHeaders = {
               headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Access-Control-Allow-Origin': "*"
               }
             };
           });

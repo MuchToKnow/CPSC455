@@ -27,11 +27,9 @@ router.get('/mine', authMiddleware, (req, res, next) => {
         }
         console.log({ values, listings, result });
       });
-      res.status(200).json(result);
-      return next();
+      return res.status(200).json(result);
     } catch (err) {
-      res.status(400).json({ error: err });
-      return next();
+      return res.status(400).json({ error: err });
     }
   });
 });

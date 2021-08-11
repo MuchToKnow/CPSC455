@@ -50,7 +50,7 @@ const ParkSpotListingCard = (props) => {
       pathname: '/listing-page/' + listingId
     }}>
       <ButtonBase id='link' href={"/listing-page/" + listingId}>
-        <Paper>
+        <Paper className="listingItem">
           <Grid container direction="row" justify="space-evenly" alignItems="center" className={classes.grid}>
             <Grid item>
               <img src={imgUrl} alt={Constants.imgAlt.userParking} className={classes.img} />

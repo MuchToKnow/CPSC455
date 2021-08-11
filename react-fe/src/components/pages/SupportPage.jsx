@@ -10,8 +10,6 @@ import EmailIcon from '@material-ui/icons/Email';
 import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
 import {Box, Typography} from "@material-ui/core";
 import '../../styling/ListingPage.css';
-import DriveEtaIcon from "@material-ui/icons/DriveEta";
-import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
 
 const EditUserInfoPage = () => {
 
@@ -34,7 +32,6 @@ const EditUserInfoPage = () => {
                         </ListItemAvatar>
                         <ListItemText className="supportInfo" color="secondary" primary="Phone" secondary="6041234567" />
                     </ListItem>
-                    {/*<Divider variant="inset" component="li" />*/}
                     <ListItem>
                         <ListItemAvatar>
                             <Avatar>
@@ -43,7 +40,6 @@ const EditUserInfoPage = () => {
                         </ListItemAvatar>
                         <ListItemText className="supportInfo" primary="Email" secondary="work@email.com" />
                     </ListItem>
-                    {/*<Divider variant="inset" component="li" />*/}
                     <ListItem>
                         <ListItemAvatar>
                             <Avatar>

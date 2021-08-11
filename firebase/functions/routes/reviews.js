@@ -9,11 +9,9 @@ router.get('/mine', authMiddleware, (req, res, next) => {
   db.getInstance(async (db) => {
     try {
       const result = await db.collection('reviews').find({ creatorUserId: req.user.uid }).toArray();
-      res.status(200).json(result);
-      return next();
+      return res.status(200).json(result);
     } catch (err) {
-      res.status(400).json({ error: err });
-      return next();
+      return res.status(400).json({ error: err });
     }
   });
 });

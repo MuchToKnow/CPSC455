@@ -29,3 +29,7 @@ code {
   width: 100%;
   position: fixed;
 }
+
+.listingItem:hover {
+  border: 1mm ridge #97a6ec;
+}

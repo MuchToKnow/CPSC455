@@ -126,7 +126,7 @@ function ListingPage(props) {
         }
     };
 
-    useEffect(setAuthHeaders, []);
+    useEffect(setAuthHeaders, [props.firebase, setAuthHeaders]);
 
     const onSubmitRating = () => {
         axios.post(url + "/reviews", {

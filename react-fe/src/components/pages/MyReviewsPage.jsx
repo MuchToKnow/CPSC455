@@ -59,7 +59,7 @@ const MyReviewsPage = (props) => {
     }
   };
 
-  useEffect(setAuthHeaders, []);
+  useEffect(setAuthHeaders, [props.firebase, setAuthHeaders]);
 
   useEffect(() => {
     setLoading(true);
@@ -79,7 +79,7 @@ const MyReviewsPage = (props) => {
         setLoading(false);
       });
     }
-  }, [searchTerm, url, authUserHeaders]);
+  }, [props.firebase, searchTerm, url, authUserHeaders]);
 
   const reviews = [];
   for (const review of respReviews) {

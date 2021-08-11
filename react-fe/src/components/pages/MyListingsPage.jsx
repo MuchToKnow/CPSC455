@@ -82,7 +82,7 @@ const MyListingsPage = (props) => {
     }
   };
 
-  useEffect(setAuthHeaders, []);
+  useEffect(setAuthHeaders, [props.firebase, setAuthHeaders]);
 
   useEffect(() => {
     setLoading(true);
@@ -101,7 +101,7 @@ const MyListingsPage = (props) => {
         setLoading(false);
       });
     }
-  }, [searchTerm, url, authUserHeaders]);
+  }, [props.firebase, searchTerm, url, authUserHeaders]);
 
   const listings = [];
   for (const listing of respListings) {
