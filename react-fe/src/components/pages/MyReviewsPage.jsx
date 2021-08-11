@@ -4,7 +4,7 @@ import { withFirebase } from '../Firebase';
 import React, { useEffect, useState } from 'react';
 import config from '../../config';
 import axios from 'axios';
-import {ButtonBase, Grid, Link, Paper, Typography} from '@material-ui/core';
+import { ButtonBase, Grid, Link, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import RateReviewIcon from '@material-ui/icons/RateReview';
@@ -25,16 +25,11 @@ const MyReviewsPage = (props) => {
   const classes = useStyles();
   const url = config.api.url;
   const [respReviews, setRespReviews] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [authUserHeaders, setAuthUserHeaders] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchReviews = () => {
-    if (searchTerm) {
-      axios.get(url + "/reviews/mine/search?searchTerm=" + searchTerm, authUserHeaders).then((resp) => setRespReviews(resp.data));
-    } else {
-      axios.get(url + "/reviews/mine", authUserHeaders).then((resp) => setRespReviews(resp.data, authUserHeaders));
-    }
+    axios.get(url + "/reviews/mine", authUserHeaders).then((resp) => setRespReviews(resp.data, authUserHeaders));
   };
 
   // Returns a function to delete a review by reviewId, requires authorization headers
@@ -63,14 +58,7 @@ const MyReviewsPage = (props) => {
 
   useEffect(() => {
     setLoading(true);
-    if (searchTerm && authUserHeaders) {
-      axios.get(url + "/reviews/mine/search?searchTerm=" + searchTerm, props.firebase.getAuthHeaders()).then((resp) => {
-        setRespReviews(resp.data);
-        setLoading(false);
-      }).catch((err) => {
-        setLoading(false);
-      });
-    } else if (!searchTerm && authUserHeaders) {
+    if (authUserHeaders) {
       axios.get(url + "/reviews/mine", props.firebase.getAuthHeaders()).then((resp) => {
         console.log(resp.data);
         setRespReviews(resp.data);
@@ -79,7 +67,7 @@ const MyReviewsPage = (props) => {
         setLoading(false);
       });
     }
-  }, [props.firebase, searchTerm, url, authUserHeaders]);
+  }, [props.firebase, url, authUserHeaders]);
 
   const reviews = [];
   for (const review of respReviews) {
@@ -93,8 +81,8 @@ const MyReviewsPage = (props) => {
               }}>
                 <ButtonBase id='link' href={"/listing-page/" + review.listingId}>
                   <Paper>
-                    <Grid container direction="column" justify="space-evenly" alignItems="center"  className={classes.grid}>
-                      <Rating name="read-only" value={review.rating} style={{position: "relative", top: 5, paddingTop: 20, paddingBottom: 20}} readOnly />
+                    <Grid container direction="column" justify="space-evenly" alignItems="center" className={classes.grid}>
+                      <Rating name="read-only" value={review.rating} style={{ position: "relative", top: 5, paddingTop: 20, paddingBottom: 20 }} readOnly />
                       <Grid item xs={12}>
                         <Typography variant="body2" gutterBottom width="auto">
                           {review.comment}
@@ -122,7 +110,7 @@ const MyReviewsPage = (props) => {
 
   return (
     <div className="App">
-      <Header onSearchChange={setSearchTerm} />
+      <Header />
       <Typography variant="h4" className={classes.header_text}><RateReviewIcon color="secondary" fontSize="large" /> My Reviews <RateReviewIcon color="secondary" fontSize="large" /></Typography>
       <Grid
         container

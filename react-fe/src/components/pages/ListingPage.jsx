@@ -193,11 +193,6 @@ function ListingPage(props) {
         setReviewsAvg(avg);
     }, [reviewsList]);
 
-    const numIcons = Math.floor(Math.random() * 3) + 1;
-    for (let i = 0; i < numIcons; i++) {
-
-    }
-
     return (
         <div>
             <Header />

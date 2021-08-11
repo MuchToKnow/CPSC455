@@ -1,12 +1,13 @@
 import {
   TextField,
-  Box, FormControl, InputLabel, Select, MenuItem, Button, DialogContent
+  Box, Button, DialogContent
 } from '@material-ui/core';
 import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { withFirebase } from '../Firebase';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const ListingForm = (props) => {
-  const { onSubmit, startDate, endDate, imgUrl, carAmt, locn, dRate, instr, descr, parkingType, parkingSize, listingId } = props;
 
   const useStyles = makeStyles((theme) => ({
     submitButton: {
@@ -24,6 +25,10 @@ const ListingForm = (props) => {
     },
     textField: {
       marginBottom: theme.spacing(2),
+    },
+    form: {
+      textAlign: 'center',
+      margin: 'auto',
     }
   }));
 
@@ -31,9 +36,10 @@ const ListingForm = (props) => {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
 
   // const handleStartDateChange = (date) => {
@@ -73,21 +79,25 @@ const ListingForm = (props) => {
   // };
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    props.firebase.firebasePasswordUpdate(password).then(() => {
-      window.location.href = '/app';
-    }).catch(() => {
-      // TODO: Error message for user
-    });
+    setIsLoading(true);
+    if (props.firebase && props.firebase.firebasePasswordUpdate) {
+      props.firebase.firebasePasswordUpdate(password).then(() => {
+        setIsLoading(false);
+        window.location.href = '/app';
+      }).catch((err) => {
+        alert("Error while setting user info." + err);
+        setIsLoading(false);
+      });
+    }
   };
 
   return (
     <div className="CreateListingPage" >
       <Box boxShadow={3} className="booking">
         <h2>Edit User Info</h2>
-        <form onSubmit={handleSubmit}>
+        <form className={classes.form}>
           <DialogContent>
-          <TextField
+            <TextField
               className={classes.textField}
               id="firstName"
               label="First Name"
@@ -96,8 +106,8 @@ const ListingForm = (props) => {
               fullWidth
               value={firstName}
               onChange={e => setFirstName(e.target.value)}
-          />
-          <TextField
+            />
+            <TextField
               className={classes.textField}
               id="lastName"
               label="Last Name"
@@ -106,8 +116,29 @@ const ListingForm = (props) => {
               fullWidth
               value={lastName}
               onChange={e => setLastName(e.target.value)}
-          />
-          <TextField
+            />
+            <TextField
+              className={classes.textField}
+              id="phoneNumber"
+              label="Phone Number"
+              name="phoneNumber"
+              variant="outlined"
+              fullWidth
+              value={phoneNumber}
+              onChange={e => setPhoneNumber(e.target.value)}
+            />
+            <TextField
+              className={classes.textField}
+              id="password"
+              label="Current Password"
+              name="password"
+              type="password"
+              variant="outlined"
+              fullWidth
+              value={currentPassword}
+              onChange={e => setCurrentPassword(e.target.value)}
+            />
+            <TextField
               className={classes.textField}
               id="password"
               label="Password"
@@ -117,25 +148,17 @@ const ListingForm = (props) => {
               fullWidth
               value={password}
               onChange={e => setPassword(e.target.value)}
-          />
-          <TextField
-              className={classes.textField}
-              id="phoneNumber"
-              label="Phone Number"
-              name="phoneNumber"
-              variant="outlined"
-              fullWidth
-              value={phoneNumber}
-              onChange={e => setPhoneNumber(e.target.value)}
-          />
-        </DialogContent>
-          <Button type="submit" variant="contained" color="secondary" className={classes.submitButton} fullWidth>
-            Confirm Change User Info
-          </Button>
+            />
+          </DialogContent>
+          {isLoading ? <CircularProgress /> :
+            <Button onClick={handleSubmit} type="submit" variant="contained" color="secondary" className={classes.submitButton} fullWidth>
+              Confirm Change User Info
+            </Button>
+          }
         </form>
       </Box>
     </div>
   );
 };
 
-export default ListingForm;
+export default withFirebase(ListingForm);

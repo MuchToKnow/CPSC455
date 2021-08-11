@@ -24,6 +24,7 @@ const useStyles = makeStyles({
 const MainApp = () => {
   const mapContainerRef = useRef(null);
   const map = useRef(null);
+  const marker = useRef(null);
   const classes = useStyles();
   const url = config.api.url;
   const [listings, setListings] = useState([]);
@@ -34,10 +35,13 @@ const MainApp = () => {
   const [lng, setLng] = useState(-123.251240);
   const [lat, setLat] = useState(49.269520);
   const [zoom, setZoom] = useState(8);
-  const marker = new mapboxgl.Marker();
 
   mapboxgl.accessToken = "pk.eyJ1IjoiZGF2aWR3NyIsImEiOiJja3Jwc3RpdGQ4cjUyMm9tbjh6MmU2YzN6In0.rKQNwIwSGSGjw_u8UHM5XQ";
   const mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+
+  useEffect(() => {
+    marker.current = new mapboxgl.Marker();
+  }, [marker]);
 
   useEffect(() => {
     if (map.current) return;
@@ -93,7 +97,7 @@ const MainApp = () => {
 
   useEffect(() => {
     const promises = [];
-    listings.map((listing) => {
+    listings.forEach((listing) => {
       console.log({ listing });
       if (listing.location) {
         promises.push(mapboxClient
@@ -141,15 +145,14 @@ const MainApp = () => {
           item
           key={listing.listingId}
           onMouseEnter={() => {
-            console.log("onmouseEnter");
-            console.log({ locations, listingId: listing.listingId, map });
-            if (locations[listing.listingId] && map.current) {
-              marker.setLngLat(locations[listing.listingId]).addTo(map.current);
+            if (locations[listing.listingId] && map.current && marker.current) {
+              marker.current.setLngLat(locations[listing.listingId]).addTo(map.current);
             }
           }}
           onMouseLeave={() => {
-            console.log("onmouseLeave");
-            marker.remove();
+            if (marker.current) {
+              marker.current.remove();
+            }
           }}
         >
           <ParkSpotListingCard
