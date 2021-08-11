@@ -24,12 +24,6 @@
     justify-content: flex-start;
 }
 
-img {
-   max-width: 100%;
-   min-width: 100%;
-   height: auto;
-}
-
 .img_logo_icon{
     object-fit: contain;
     height: 100%;

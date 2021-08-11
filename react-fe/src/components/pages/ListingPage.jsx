@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../../styling/ListingPage.css';
 import Header from '../organisms/Header';
@@ -51,6 +51,12 @@ function ListingPage(props) {
             padding: theme.spacing(2),
             margin: 'auto',
             width: 500,
+        },
+        image: {
+            display: 'block',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            maxHeight: 400,
         }
     }));
 
@@ -185,12 +191,17 @@ function ListingPage(props) {
         setReviewsAvg(avg);
     }, [reviewsList]);
 
+    const numIcons = Math.floor(Math.random() * 3) + 1;
+    for (let i = 0; i < numIcons; i++) {
+
+    }
+
     return (
         <div>
             <Header />
             <div className="ListingPage" >
                 <Typography variant="h5" className="banner_text">{location}</Typography>
-                <img src={imgUrl} alt={Constants.imgAlt.userParking} />
+                <img className={classes.image} src={imgUrl} alt={Constants.imgAlt.userParking} />
                 <div className="belowImgContainer">
                     <div className="descriptions">
                         <Typography variant="h6" className={classes.availabilityText}>{numberAvail} spot(s) available - {size}</Typography>
@@ -252,9 +263,9 @@ function ListingPage(props) {
                         <div className="userReviews">
                             <Paper className={classes.paper}>
                                 <Typography variant="body1" gutterBottom>
-                                    Overall Rating: <Rating name="read-only" precision={0.1} value={reviewsAvg} style={{position: "relative", top: 5}} readOnly />
+                                    Overall Rating: <Rating name="read-only" precision={0.1} value={reviewsAvg} style={{ position: "relative", top: 5 }} readOnly />
                                 </Typography>
-                                <Divider style={{marginTop: 20, marginBottom: 20}}/>
+                                <Divider style={{ marginTop: 20, marginBottom: 20 }} />
                                 {reviewsEntries.length === 0 ?
                                     <Typography variant="body2" gutterBottom>
                                         No ratings yet
@@ -284,11 +295,11 @@ function ListingPage(props) {
                                 value={ratingComment}
                                 onChange={handleRatingCommentChange}
                                 variant="outlined"
-                                style={{marginLeft: 20, marginTop: -20, marginBottom: 10, width: 300}}
+                                style={{ marginLeft: 20, marginTop: -20, marginBottom: 10, width: 300 }}
                             />
                             <Button
                                 variant="contained" color="secondary"
-                                style={{marginLeft: 20, padding: 0, paddingTop: 5, paddingBottom: 5, display: "block"}}
+                                style={{ marginLeft: 20, padding: 0, paddingTop: 5, paddingBottom: 5, display: "block" }}
                                 className={classes.ratingSubmitButton}
                                 onClick={onSubmitRating}
                             >

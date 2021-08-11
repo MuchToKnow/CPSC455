@@ -8,7 +8,7 @@ import WifiIcon from '@material-ui/icons/Wifi';
 import BatteryChargingFullIcon from '@material-ui/icons/BatteryChargingFull';
 import LockIcon from '@material-ui/icons/Lock';
 
-function FeatureList() {
+function FeatureList(props) {
   return (
     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
       <ListItem>
@@ -17,7 +17,7 @@ function FeatureList() {
             <WifiIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary="Free Wifi"/>
+        <ListItemText primary="Free Wifi" />
       </ListItem>
       <ListItem>
         <ListItemAvatar>
@@ -33,7 +33,7 @@ function FeatureList() {
             <LockIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary="Safe Parking"/>
+        <ListItemText primary="Safe Parking" />
       </ListItem>
     </List>
   );
