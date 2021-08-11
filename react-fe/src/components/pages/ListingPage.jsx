@@ -151,7 +151,9 @@ function ListingPage(props) {
         }, authUserHeaders).then((resp) => {
             alert("Booking created successfully");
         }).catch((err) => {
-            alert("Server error - failed to create booking: " + err);
+            if (err.response && err.response.data && err.response.data.error) {
+                alert("Server error - failed to create booking: " + err.response.data.error);
+            }
         });
     };
 

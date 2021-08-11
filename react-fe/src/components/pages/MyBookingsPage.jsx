@@ -10,6 +10,7 @@ import { Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import ConfirmDialog from '../atoms/ConfirmDialog';
+import {Constants} from "../Constants";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -65,9 +66,9 @@ const MyBookingsTable = (props) => {
     }
   };
 
-  useEffect(setAuthHeaders, []);
+  useEffect(setAuthHeaders, [props.firebase, setAuthHeaders]);
 
-  useEffect(getAndSetBookings, [authUserHeaders]);
+  useEffect(getAndSetBookings, [url, authUserHeaders]);
 
   const deleteBooking = (bookingId, reqHeaders) => {
     return () => {
@@ -89,7 +90,7 @@ const MyBookingsTable = (props) => {
       width: 125,
       sortable: false,
       renderCell: (params) => (
-        <img src={params.value} className={classes.thumb} />
+        <img src={params.value} alt={Constants.imgAlt.userParking} className={classes.thumb} />
       ),
     },
     {
