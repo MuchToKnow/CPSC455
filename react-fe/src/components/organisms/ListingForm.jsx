@@ -155,7 +155,7 @@ const ListingForm = (props) => {
           className={classes.textField}
           required
           id="dailyRate"
-          label="Daily Rate"
+          label="Daily Rate ($)"
           name="dailyRate"
           variant="outlined"
           value={dailyRate}
