@@ -49,7 +49,7 @@ const RegisterForm = (props) => {
             window.location.href = '/app';
             handleClose();
         }).catch(() => {
-            // TODO: Error message for user
+            console.log('Error in register submit')
         });
     };
 

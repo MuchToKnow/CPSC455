@@ -45,7 +45,7 @@ const LoginForm = (props) => {
         props.firebase.firebaseSignInEmailAndPassword(email, password).then(() => {
             window.location.href = '/app';
         }).catch(() => {
-            // TODO: Error message to user
+            console.log('Login error')
         });
     };
 
