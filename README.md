@@ -68,7 +68,7 @@ Created custom Express.js middleware that could be inserted into our routes easi
 ### Justin
 - Built out our listings and bookings system for frontend and backend including listing search using a fuzzy find library.
 - Built the authentication middleware and overall system for securing our API requests utilizing firebase authentication tokens with our custom backend.
-- Built the My Listings page with full in-page edit/delete functionality per listing. Also built reusable front-end components such as the user menu, listing menu component.
+- Built the My Listings page with full in-page edit/delete functionality per listing. Also built reusable front-end components such as the user menu and listing component as well as built out markers-on-hover for our map.
 ### Darvey
 - Worked on the landing page on the applications, moved login and register functionality to the login page.
 - Spent time and made changes on UI and UX design by importing designed logo and colour changes to the web application 
