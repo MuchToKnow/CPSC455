@@ -130,8 +130,6 @@ const MainApp = () => {
           }
           const feature = response.body.features[0];
           locationsCopy[response.listingId] = feature.center;
-          // // Create a marker and add it to the map.
-          // new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
         });
         setLocations(locationsCopy);
       });
