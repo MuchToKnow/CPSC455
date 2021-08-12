@@ -132,36 +132,4 @@ router.delete('/:bookingId', authMiddleware, (req, res, next) => {
   });
 });
 
-// /* PUT update single listing */
-// router.put('/:listingId', authMiddleware, (req, res, next) => {
-//   if (!req.user || !req.user.uid) {
-//     res.status(401).json({ error: "Unauthorized, no user id available" });
-//     return next();
-//   }
-//   // Not the most secure, but only the owner of the document can call these so it's not an issue.
-//   const updateDoc = {
-//     $set: req.body
-//   };
-//   db.getInstance(async (db) => {
-//     try {
-//       const result = await db.collection('listings').findOne({ listingId: req.params.listingId });
-//       if (!result.creatorUserId || result.creatorUserId !== req.user.uid) {
-//         res.status(401).json({ error: "Unauthorized" });
-//         return next();
-//       }
-//     } catch (err) {
-//       res.status(400).json({ error: err });
-//       return next();
-//     }
-//     try {
-//       await db.collection('listings').updateOne({ listingId: req.params.listingId }, updateDoc);
-//       res.status(200).json("Success");
-//       return next();
-//     } catch (err) {
-//       res.status(400).json({ error: err });
-//       return next();
-//     }
-//   });
-// });
-
 module.exports = router;
