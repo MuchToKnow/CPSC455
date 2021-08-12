@@ -15,6 +15,7 @@ const useStyles = makeStyles({
   header_text: {
     marginTop: '20px',
     marginBottom: '10px',
+    width: "100%"
   },
   listingsElements: {
     width: "40%",

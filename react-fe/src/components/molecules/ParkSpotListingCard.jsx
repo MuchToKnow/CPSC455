@@ -26,7 +26,7 @@ const ParkSpotListingCard = (props) => {
       marginBottom: '20px'
     },
     grid: {
-      width: '700px'
+      maxWidth: '600px'
     }
   }));
 

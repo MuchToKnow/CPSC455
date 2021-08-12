@@ -30,6 +30,10 @@ code {
   position: fixed;
 }
 
+.listingItem {
+  width: 100%;
+}
+
 .listingItem:hover {
   border: 1mm ridge #97a6ec;
 }
